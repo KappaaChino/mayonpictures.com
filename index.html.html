@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mayon Pictures — Where Stories Erupt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ash: #0c0b0a;
+    --crater: #1a1410;
+    --lava: #e84c1e;
+    --ember: #f97316;
+    --gold: #d4a843;
+    --smoke: #6b6560;
+    --mist: #c8bdb6;
+    --snow: #f5f0eb;
+    --obsidian: #1f1c18;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ash);
+    color: var(--snow);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--lava);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(232,76,30,0.5);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease-out, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Page system */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; animation: fadeIn 0.6s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(12,11,10,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--snow);
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .nav-logo span { color: var(--lava); }
+  .nav-logo:hover { color: var(--ember); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links li a {
+    color: var(--mist);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.3s;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .nav-links li a:hover,
+  .nav-links li a.active {
+    color: var(--lava);
+    border-color: var(--lava);
+  }
+
+  /* ===================== HOME PAGE ===================== */
+  .hero {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 48px 80px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 110%, rgba(232,76,30,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 50% 105%, rgba(249,115,22,0.15) 0%, transparent 50%),
+      linear-gradient(to top, var(--ash) 0%, var(--crater) 30%, #0f0e0c 70%, var(--ash) 100%);
+  }
+
+  /* Volcano silhouette */
+  .volcano-svg {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 900px;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  /* Lava particles */
+  .particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: rise linear infinite;
+    opacity: 0;
+  }
+  @keyframes rise {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.8; }
+    50% { opacity: 0.6; }
+    100% { transform: translateY(-80vh) translateX(var(--drift)) scale(0.2); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--lava);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--lava);
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(56px, 9vw, 130px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+  }
+  .hero-title .line2 {
+    font-style: italic;
+    color: var(--lava);
+    display: block;
+  }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--mist);
+    margin-bottom: 48px;
+    letter-spacing: 1px;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 14px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--lava);
+    color: var(--snow);
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-primary:hover {
+    background: var(--ember);
+    transform: translateY(-2px);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--mist);
+    border: 1px solid rgba(200,189,182,0.3);
+  }
+  .btn-ghost:hover {
+    color: var(--snow);
+    border-color: var(--snow);
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    right: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--smoke);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--smoke), transparent);
+    animation: scrollDrop 2s ease-in-out infinite;
+  }
+  @keyframes scrollDrop {
+    0%, 100% { transform: scaleY(1); transform-origin: top; }
+    50% { transform: scaleY(0.4); transform-origin: top; }
+  }
+
+  /* Home sections */
+  .section { padding: 100px 48px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--lava);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(232,76,30,0.4), transparent);
+    max-width: 120px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 72px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 48px;
+  }
+
+  /* Featured strip */
+  .features-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid rgba(200,189,182,0.1);
+    margin: 0 48px;
+  }
+  .feature-item {
+    padding: 40px 32px;
+    border-right: 1px solid rgba(200,189,182,0.1);
+    cursor: pointer;
+    transition: background 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-item:last-child { border-right: none; }
+  .feature-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--lava), var(--ember));
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .feature-item:hover::before { transform: scaleX(1); }
+  .feature-item:hover { background: rgba(232,76,30,0.05); }
+
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .feature-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--snow);
+    margin-bottom: 12px;
+  }
+  .feature-desc {
+    font-size: 12px;
+    color: var(--smoke);
+    line-height: 1.8;
+  }
+  .feature-arrow {
+    margin-top: 20px;
+    color: var(--lava);
+    font-size: 18px;
+    display: block;
+    transition: transform 0.3s;
+  }
+  .feature-item:hover .feature-arrow { transform: translateX(6px); }
+
+  /* Latest section */
+  .latest-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2px;
+    background: rgba(200,189,182,0.1);
+  }
+  .latest-card {
+    background: var(--ash);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .latest-card:hover { background: var(--obsidian); }
+  .latest-card.featured { padding: 48px; }
+
+  .card-tag {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--lava);
+    padding: 4px 10px;
+    border: 1px solid rgba(232,76,30,0.4);
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--snow);
+    margin-bottom: 12px;
+  }
+  .latest-card.featured .card-title { font-size: 32px; }
+  .latest-card:not(.featured) .card-title { font-size: 18px; }
+
+  .card-meta {
+    font-size: 10px;
+    color: var(--smoke);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .card-body {
+    font-size: 13px;
+    color: var(--mist);
+    line-height: 1.8;
+    margin: 16px 0;
+  }
+  .card-rating {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 8px;
+  }
+  .star { color: var(--gold); font-size: 12px; }
+  .star.empty { color: var(--smoke); }
+
+  /* Divider */
+  .volcanic-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--lava), var(--ember), var(--lava), transparent);
+    opacity: 0.3;
+    margin: 0 48px;
+  }
+
+  /* ===================== BOX OFFICE PAGE ===================== */
+  .bo-header {
+    padding: 160px 48px 60px;
+    background: linear-gradient(to bottom, rgba(232,76,30,0.08), transparent);
+    border-bottom: 1px solid rgba(200,189,182,0.1);
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin: 48px 48px 0;
+    border-bottom: 1px solid rgba(200,189,182,0.15);
+  }
+  .tab {
+    padding: 14px 28px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--smoke);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.3s;
+  }
+  .tab.active, .tab:hover {
+    color: var(--snow);
+    border-bottom-color: var(--lava);
+  }
+
+  .bo-content { padding: 0 48px 80px; }
+
+  .bo-table-wrap {
+    margin-top: 40px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    border-bottom: 1px solid rgba(200,189,182,0.15);
+  }
+  th {
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    font-weight: 400;
+  }
+  td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(200,189,182,0.06);
+    color: var(--mist);
+    transition: background 0.2s;
+  }
+  tr:hover td { background: rgba(232,76,30,0.04); }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--smoke);
+  }
+  .rank-num.top3 { color: var(--lava); }
+
+  .movie-title-cell {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--snow);
+    font-size: 15px;
+  }
+  .movie-badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+    border: 1px solid;
+  }
+  .badge-local { color: var(--gold); border-color: rgba(212,168,67,0.4); }
+  .badge-intl { color: var(--smoke); border-color: rgba(107,101,96,0.4); }
+
+  .revenue-cell {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+  .revenue-cell.up { color: #4ade80; }
+  .revenue-cell.down { color: var(--lava); }
+
+  .bar-cell { min-width: 160px; }
+  .progress-bar {
+    height: 3px;
+    background: rgba(200,189,182,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--lava), var(--ember));
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .change-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .change-up { background: rgba(74,222,128,0.12); color: #4ade80; }
+  .change-down { background: rgba(232,76,30,0.12); color: var(--lava); }
+  .change-same { background: rgba(107,101,96,0.2); color: var(--smoke); }
+
+  .weekly-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: rgba(200,189,182,0.08);
+    margin-top: 40px;
+  }
+  .stat-box {
+    background: var(--ash);
+    padding: 32px;
+  }
+  .stat-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 12px;
+  }
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--snow);
+    letter-spacing: 1px;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--smoke);
+    margin-top: 4px;
+  }
+
+  /* ===================== REVIEWS PAGE ===================== */
+  .reviews-header {
+    padding: 160px 48px 60px;
+    border-bottom: 1px solid rgba(200,189,182,0.1);
+  }
+
+  .reviews-grid {
+    padding: 60px 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(200,189,182,0.06);
+  }
+
+  .review-card {
+    background: var(--ash);
+    padding: 36px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .review-card:hover { background: var(--obsidian); }
+
+  .review-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--lava);
+    margin-bottom: 4px;
+  }
+  .review-score-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 20px;
+  }
+
+  .review-poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: var(--obsidian);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .poster-placeholder {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--smoke);
+    text-align: center;
+    padding: 20px;
+  }
+  .poster-genre-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+  }
+
+  .review-meta {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 10px;
+  }
+
+  .review-verdict {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--mist);
+    line-height: 1.7;
+    flex: 1;
+    margin-top: 12px;
+  }
+
+  .review-byline {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(200,189,182,0.1);
+    font-size: 10px;
+    color: var(--smoke);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Review featured banner */
+  .review-featured {
+    margin: 0 48px;
+    padding: 48px;
+    background: var(--obsidian);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 48px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .review-featured::before {
+    content: 'EDITORS PICK';
+    position: absolute;
+    top: 24px; right: -24px;
+    background: var(--lava);
+    color: var(--snow);
+    font-size: 9px;
+    letter-spacing: 3px;
+    padding: 6px 32px;
+    transform: rotate(90deg) translateY(50%);
+    transform-origin: right center;
+  }
+  .featured-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 180px;
+    line-height: 1;
+    color: rgba(232,76,30,0.2);
+    position: absolute;
+    right: -10px;
+    bottom: -20px;
+    pointer-events: none;
+  }
+
+  /* ===================== PITCHES PAGE ===================== */
+  .pitches-header {
+    padding: 160px 48px 60px;
+    border-bottom: 1px solid rgba(200,189,182,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pitch-intro {
+    padding: 60px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-bottom: 1px solid rgba(200,189,182,0.1);
+  }
+
+  .pitch-rules {
+    list-style: none;
+    margin-top: 24px;
+  }
+  .pitch-rules li {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(200,189,182,0.08);
+    font-size: 13px;
+    color: var(--mist);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    line-height: 1.6;
+  }
+  .pitch-rules li::before {
+    content: attr(data-n);
+    color: var(--lava);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    min-width: 24px;
+  }
+
+  .pitch-form {
+    background: var(--obsidian);
+    border: 1px solid rgba(200,189,182,0.08);
+    padding: 40px;
+  }
+  .form-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    margin-bottom: 32px;
+    color: var(--snow);
+  }
+  .form-title span { color: var(--lava); }
+
+  .field-group {
+    margin-bottom: 24px;
+  }
+  label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 8px;
+  }
+  input, textarea, select {
+    width: 100%;
+    background: rgba(200,189,182,0.05);
+    border: 1px solid rgba(200,189,182,0.12);
+    color: var(--snow);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--lava);
+  }
+  textarea { resize: vertical; min-height: 100px; }
+  select option { background: var(--obsidian); }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .genre-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .genre-pill {
+    padding: 6px 14px;
+    border: 1px solid rgba(200,189,182,0.15);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--smoke);
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .genre-pill.selected, .genre-pill:hover {
+    border-color: var(--lava);
+    color: var(--lava);
+  }
+
+  .submit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+  }
+  .char-count { font-size: 10px; color: var(--smoke); }
+
+  /* Recent pitches */
+  .recent-pitches {
+    padding: 60px 48px;
+  }
+  .pitches-feed {
+    margin-top: 40px;
+    display: grid;
+    gap: 2px;
+    background: rgba(200,189,182,0.06);
+  }
+  .pitch-row {
+    background: var(--ash);
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 24px;
+    padding: 28px 32px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .pitch-row:hover { background: var(--obsidian); }
+
+  .pitch-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: rgba(200,189,182,0.15);
+    text-align: center;
+  }
+
+  .pitch-info .pitch-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--snow);
+    margin-bottom: 6px;
+  }
+  .pitch-info .pitch-logline {
+    font-size: 12px;
+    color: var(--smoke);
+    line-height: 1.6;
+  }
+
+  .pitch-status {
+    text-align: right;
+  }
+  .status-badge {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid;
+  }
+  .status-review { color: var(--gold); border-color: rgba(212,168,67,0.4); }
+  .status-dev { color: #4ade80; border-color: rgba(74,222,128,0.4); }
+  .status-open { color: var(--lava); border-color: rgba(232,76,30,0.4); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(200,189,182,0.1);
+    padding: 60px 48px 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--snow);
+    margin-bottom: 16px;
+  }
+  .footer-brand span { color: var(--lava); }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--smoke);
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  .footer-copy {
+    font-size: 10px;
+    color: var(--smoke);
+    letter-spacing: 1px;
+  }
+  .footer-col h4 {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-bottom: 20px;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li {
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--mist);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .footer-col ul li:hover { color: var(--lava); }
+
+  .lava-line {
+    width: calc(100% - 96px);
+    margin: 0 auto;
+    height: 2px;
+    background: linear-gradient(to right, var(--lava), var(--ember), var(--gold), var(--lava));
+    opacity: 0.4;
+    margin-bottom: 60px;
+  }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background: var(--obsidian);
+    border: 1px solid rgba(232,76,30,0.4);
+    border-left: 3px solid var(--lava);
+    padding: 16px 24px;
+    font-size: 12px;
+    color: var(--mist);
+    z-index: 1000;
+    transform: translateX(200%);
+    transition: transform 0.4s ease;
+    max-width: 280px;
+  }
+  .toast.show { transform: translateX(0); }
+  .toast strong { color: var(--snow); display: block; margin-bottom: 4px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 20px; }
+    .hero { padding: 0 24px 60px; }
+    .section { padding: 60px 24px; }
+    .features-strip { grid-template-columns: repeat(2, 1fr); margin: 0 24px; }
+    .latest-grid { grid-template-columns: 1fr; }
+    .reviews-grid { grid-template-columns: repeat(2, 1fr); padding: 40px 24px; }
+    .pitch-intro { grid-template-columns: 1fr; gap: 40px; padding: 40px 24px; }
+    .bo-content { padding: 0 24px 60px; }
+    .tabs { margin: 40px 24px 0; }
+    footer { grid-template-columns: 1fr 1fr; padding: 40px 24px; }
+    .weekly-stats { grid-template-columns: repeat(2, 1fr); }
+    .review-featured { margin: 0 24px; grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+    .recent-pitches { padding: 40px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="toast" id="toast">
+  <strong id="toastTitle">Pitch Submitted!</strong>
+  <span id="toastMsg">Your story has erupted. We'll be in touch.</span>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-logo" onclick="navigate('home')">MAYON<span>.</span>PICTURES</div>
+  <ul class="nav-links">
+    <li><a onclick="navigate('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="navigate('boxoffice')" id="nav-boxoffice">Box Office</a></li>
+    <li><a onclick="navigate('reviews')" id="nav-reviews">Reviews</a></li>
+    <li><a onclick="navigate('pitches')" id="nav-pitches">Pitch Us</a></li>
+  </ul>
+</nav>
+
+<!-- ===================================================
+     HOME PAGE
+     =================================================== -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-bg"></div>
+
+    <!-- Volcano SVG -->
+    <svg class="volcano-svg" viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 400 L200 400 L320 280 L390 160 L420 80 L450 30 L480 80 L510 160 L580 280 L700 400 L900 400 Z" fill="url(#volGrad)"/>
+      <path d="M380 200 L420 80 L450 30 L480 80 L520 200" fill="url(#craterGrad)" opacity="0.6"/>
+      <defs>
+        <linearGradient id="volGrad" x1="450" y1="0" x2="450" y2="400" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#e84c1e" stop-opacity="0.8"/>
+          <stop offset="60%" stop-color="#6b6560" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#1a1410" stop-opacity="0.9"/>
+        </linearGradient>
+        <linearGradient id="craterGrad" x1="450" y1="0" x2="450" y2="200" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#e84c1e" stop-opacity="0.3"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="hero-content">
+      <div class="hero-eyebrow">mayonpictures.com — Est. 2024</div>
+      <h1 class="hero-title">
+        MAYON
+        <span class="line2">Pictures</span>
+      </h1>
+      <p class="hero-tagline">Where Stories Erupt.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" onclick="navigate('pitches')">Pitch Your Story</a>
+        <a class="btn btn-ghost" onclick="navigate('boxoffice')">View Box Office</a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">Scroll</div>
+  </div>
+
+  <!-- Features strip -->
+  <div class="features-strip">
+    <div class="feature-item" onclick="navigate('boxoffice')">
+      <span class="feature-icon">📊</span>
+      <div class="feature-title">Box Office Tracker</div>
+      <div class="feature-desc">Live rankings for local and international films. Weekly grosses, running totals, and market share breakdowns.</div>
+      <span class="feature-arrow">→</span>
+    </div>
+    <div class="feature-item" onclick="navigate('reviews')">
+      <span class="feature-icon">🎬</span>
+      <div class="feature-title">Movie Reviews</div>
+      <div class="feature-desc">Unfiltered critiques from the volcanic heart of Philippine cinema culture and beyond.</div>
+      <span class="feature-arrow">→</span>
+    </div>
+    <div class="feature-item" onclick="navigate('pitches')">
+      <span class="feature-icon">📝</span>
+      <div class="feature-title">Movie Pitches</div>
+      <div class="feature-desc">Got a story that's ready to erupt? Submit your pitch. We read every single one.</div>
+      <span class="feature-arrow">→</span>
+    </div>
+    <div class="feature-item">
+      <span class="feature-icon">🌋</span>
+      <div class="feature-title">Original Content</div>
+      <div class="feature-desc">Deep dives, essays, and longform writing about Philippine and world cinema.</div>
+      <span class="feature-arrow">→</span>
+    </div>
+  </div>
+
+  <!-- Latest section -->
+  <div class="section">
+    <div class="section-label">Latest from Mayon Pictures</div>
+    <div class="section-title">Fresh <em>off the crater</em></div>
+    <div class="latest-grid">
+      <div class="latest-card featured">
+        <div class="card-tag">Featured Review</div>
+        <div class="card-rating">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          <span class="star">★</span><span class="star empty">★</span>
+        </div>
+        <div class="card-title">The weight of a nation's grief sits heavy in every frame — and not without reason.</div>
+        <div class="card-body">A sprawling, violent love letter to Filipino resilience. The director commands the screen with the confidence of someone who has already earned their place in history, yet still hungers for more.</div>
+        <div class="card-meta">Drama · Philippine Cinema · 2h 44m</div>
+      </div>
+      <div class="latest-card">
+        <div class="card-tag">Box Office</div>
+        <div class="card-title">Local Films Dominate Holiday Weekend</div>
+        <div class="card-meta">2 days ago · Weekend Gross</div>
+        <div class="card-body">Three Filipino entries claim the top spots as audiences return in record numbers this season.</div>
+      </div>
+      <div class="latest-card">
+        <div class="card-tag">Pitch Accepted</div>
+        <div class="card-title">Albay-set thriller greenlit for development</div>
+        <div class="card-meta">1 week ago · Development</div>
+        <div class="card-body">A pitch submitted through our portal moves into active development. The volcanic setting was a key selling point.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="volcanic-divider"></div>
+  <div class="lava-line"></div>
+  <footer>
+    <div>
+      <div class="footer-brand">MAYON<span>.</span>PICTURES</div>
+      <div class="footer-tagline">Where Stories Erupt.</div>
+      <div class="footer-copy">© 2024 Mayon Pictures. All rights reserved.<br>mayonpictures.com · Legazpi City, Albay, Philippines</div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li onclick="navigate('home')">Home</li>
+        <li onclick="navigate('boxoffice')">Box Office</li>
+        <li onclick="navigate('reviews')">Reviews</li>
+        <li onclick="navigate('pitches')">Pitch Us</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Categories</h4>
+      <ul>
+        <li>Philippine Cinema</li>
+        <li>International</li>
+        <li>Documentary</li>
+        <li>Short Film</li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li>Instagram</li>
+        <li>Facebook</li>
+        <li>YouTube</li>
+        <li>Contact</li>
+      </ul>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================================================
+     BOX OFFICE PAGE
+     =================================================== -->
+<div class="page" id="page-boxoffice">
+  <div class="bo-header">
+    <div class="section-label">Weekend Estimates</div>
+    <h2 class="section-title">Box Office <em>Tracker</em></h2>
+    <p style="color: var(--smoke); font-size: 13px; max-width: 600px; line-height: 1.8;">Weekly rankings of the highest-grossing films across Philippine cinemas and worldwide. Updated every Monday.</p>
+  </div>
+
+  <div class="weekly-stats" style="margin: 0 48px; margin-top: 48px;">
+    <div class="stat-box">
+      <div class="stat-label">Total Weekend Gross (PH)</div>
+      <div class="stat-value">₱482M</div>
+      <div class="stat-sub">↑ 12% vs last weekend</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Films in Wide Release</div>
+      <div class="stat-value">23</div>
+      <div class="stat-sub">8 local · 15 international</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">#1 Film Gross</div>
+      <div class="stat-value">₱118M</div>
+      <div class="stat-sub">Opening weekend record attempt</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Cumulative Local Total</div>
+      <div class="stat-value">₱2.1B</div>
+      <div class="stat-sub">Year-to-date, Philippine box office</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(this, 'ph')">Philippine Charts</div>
+    <div class="tab" onclick="switchTab(this, 'intl')">International Charts</div>
+    <div class="tab" onclick="switchTab(this, 'alltime')">All-Time PH Records</div>
+  </div>
+
+  <div class="bo-content">
+    <div id="table-ph" class="bo-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Weekend Gross</th>
+            <th>Running Total</th>
+            <th>Weeks</th>
+            <th>Performance</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody id="ph-tbody"></tbody>
+      </table>
+    </div>
+
+    <div id="table-intl" class="bo-table-wrap" style="display:none">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Weekend Gross (Global)</th>
+            <th>Worldwide Total</th>
+            <th>Weeks</th>
+            <th>Performance</th>
+            <th>Change</th>
+          </tr>
+        </thead>
+        <tbody id="intl-tbody"></tbody>
+      </table>
+    </div>
+
+    <div id="table-alltime" class="bo-table-wrap" style="display:none">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Title</th>
+            <th>Year</th>
+            <th>All-Time PH Gross</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="alltime-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="lava-line" style="margin-top: 0;"></div>
+  <footer>
+    <div>
+      <div class="footer-brand">MAYON<span>.</span>PICTURES</div>
+      <div class="footer-tagline">Where Stories Erupt.</div>
+      <div class="footer-copy">© 2024 Mayon Pictures · mayonpictures.com</div>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
+    <div class="footer-col"><h4>Data Source</h4><ul><li>OctoArts</li><li>FDCP Reports</li><li>Box Office Mojo</li><li>TheNumbers.com</li></ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul><li>Instagram</li><li>Facebook</li><li>Contact</li></ul></div>
+  </footer>
+</div>
+
+<!-- ===================================================
+     REVIEWS PAGE
+     =================================================== -->
+<div class="page" id="page-reviews">
+  <div class="reviews-header">
+    <div class="section-label">Critical Perspectives</div>
+    <h2 class="section-title">Movie <em>Reviews</em></h2>
+    <p style="color: var(--smoke); font-size: 13px; max-width: 600px; line-height: 1.8; margin-top: 16px;">Honest, informed criticism of Philippine and international cinema. Scored on a 10-point scale. No sponsors. No pull quotes.</p>
+  </div>
+
+  <!-- Editor's pick banner -->
+  <div class="review-featured" style="margin-top: 48px; margin-bottom: 2px;">
+    <div>
+      <div class="card-tag">Editor's Pick</div>
+      <div class="card-rating" style="margin: 12px 0;">
+        <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+      </div>
+      <div style="font-family:'Playfair Display',serif; font-size:clamp(24px,3vw,40px); font-weight:700; line-height:1.1; margin-bottom:16px;">AURORA<br><em style="color:var(--smoke); font-size:0.6em; font-weight:300;">A film that earns its silence</em></div>
+      <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mist); line-height:1.8; margin-bottom:24px;">"Rare is the Philippine film that trusts its audience enough to withhold. Aurora does not explain itself. It breathes, shudders, and erupts — all on its own terms."</p>
+      <div style="font-size:10px; letter-spacing:2px; color:var(--smoke); text-transform:uppercase;">Drama · Horror · 1h 58m · 2024</div>
+    </div>
+    <div style="background:var(--ash); aspect-ratio:2/3; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:64px; color:rgba(232,76,30,0.15); letter-spacing:8px;">AURORA</div>
+    <div class="featured-score">10</div>
+  </div>
+
+  <div class="reviews-grid" id="reviews-grid"></div>
+
+  <div style="text-align:center; padding: 60px 48px;">
+    <div class="section-label" style="justify-content:center;">More Reviews</div>
+    <p style="color:var(--smoke); font-size:13px; margin-bottom:32px;">Browse our archive of 200+ reviews spanning Philippine, Asian, and World cinema.</p>
+    <button class="btn btn-ghost">Load More Reviews</button>
+  </div>
+
+  <div class="lava-line"></div>
+  <footer>
+    <div>
+      <div class="footer-brand">MAYON<span>.</span>PICTURES</div>
+      <div class="footer-tagline">Where Stories Erupt.</div>
+      <div class="footer-copy">© 2024 Mayon Pictures · mayonpictures.com</div>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
+    <div class="footer-col"><h4>Categories</h4><ul><li>Philippine</li><li>Asian Cinema</li><li>Hollywood</li><li>Arthouse</li></ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul><li>Instagram</li><li>Facebook</li><li>Contact</li></ul></div>
+  </footer>
+</div>
+
+<!-- ===================================================
+     PITCHES PAGE
+     =================================================== -->
+<div class="page" id="page-pitches">
+  <div class="pitches-header">
+    <div class="section-label">Open Submissions</div>
+    <h2 class="section-title">Pitch <em>Your Story</em></h2>
+    <p style="color: var(--smoke); font-size:13px; max-width:600px; line-height:1.8; margin-top:16px;">We believe the next great Filipino film is waiting to be discovered. If you've got a story that needs to be told — bring the heat.</p>
+  </div>
+
+  <div class="pitch-intro">
+    <div>
+      <div class="section-label">Before You Submit</div>
+      <div style="font-family:'Playfair Display',serif; font-size:28px; font-weight:700; margin-bottom:24px; line-height:1.1;">What makes a pitch <em>erupt?</em></div>
+      <p style="color:var(--smoke); font-size:13px; line-height:1.8; margin-bottom:24px;">We're not looking for perfect scripts. We're looking for stories with volcanic energy — ideas that feel inevitable, urgent, and uniquely Filipino.</p>
+      <ul class="pitch-rules">
+        <li data-n="01">Your story must have a clear emotional core. What does your protagonist want? What do they need? These should be different things.</li>
+        <li data-n="02">Set it anywhere. We love international co-productions, but stories rooted in Filipino experience are always given priority.</li>
+        <li data-n="03">The logline should fit in one breath. If you can't say it out loud without pausing, it's not ready.</li>
+        <li data-n="04">Budget agnosticism. Don't pitch us based on what you think we can afford. Pitch us based on the story you want to tell.</li>
+        <li data-n="05">We respond to all serious submissions within 30 business days.</li>
+      </ul>
+    </div>
+
+    <div class="pitch-form">
+      <div class="form-title">SUBMIT<br><span>YOUR PITCH</span></div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Your Name</label>
+          <input type="text" id="f-name" placeholder="Full name">
+        </div>
+        <div class="field-group">
+          <label>Email Address</label>
+          <input type="email" id="f-email" placeholder="you@email.com">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Project Title</label>
+        <input type="text" id="f-title" placeholder="Working title">
+      </div>
+      <div class="field-group">
+        <label>Format</label>
+        <select id="f-format">
+          <option value="">Select format</option>
+          <option>Feature Film</option>
+          <option>Short Film</option>
+          <option>Documentary</option>
+          <option>Series / Mini-series</option>
+          <option>Animated Feature</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Genre (select all that apply)</label>
+        <div class="genre-pills">
+          <span class="genre-pill" onclick="togglePill(this)">Drama</span>
+          <span class="genre-pill" onclick="togglePill(this)">Thriller</span>
+          <span class="genre-pill" onclick="togglePill(this)">Horror</span>
+          <span class="genre-pill" onclick="togglePill(this)">Romance</span>
+          <span class="genre-pill" onclick="togglePill(this)">Comedy</span>
+          <span class="genre-pill" onclick="togglePill(this)">Action</span>
+          <span class="genre-pill" onclick="togglePill(this)">Sci-Fi</span>
+          <span class="genre-pill" onclick="togglePill(this)">Fantasy</span>
+          <span class="genre-pill" onclick="togglePill(this)">Documentary</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Logline <span style="color:var(--smoke);">(one sentence)</span></label>
+        <textarea id="f-logline" rows="2" placeholder="When [protagonist] must [goal], they discover [complication]." oninput="updateCount()"></textarea>
+      </div>
+      <div class="field-group">
+        <label>Synopsis <span style="color:var(--smoke);">(250 words max)</span></label>
+        <textarea id="f-synopsis" rows="4" placeholder="Tell us the full story. Beginning, middle, end." oninput="updateCount()"></textarea>
+      </div>
+      <div class="submit-row">
+        <div class="char-count" id="charCount">0 / 250 words</div>
+        <button class="btn btn-primary" onclick="submitPitch()">Ignite Submission →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent pitches feed -->
+  <div class="recent-pitches">
+    <div class="section-label">Community Pitches</div>
+    <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:700; margin-bottom:8px;">Stories <em>waiting to erupt</em></div>
+    <p style="color:var(--smoke); font-size:13px; line-height:1.8; max-width:500px; margin-bottom:40px;">A selection of submitted pitches currently in our review pipeline.</p>
+
+    <div class="pitches-feed" id="pitches-feed"></div>
+  </div>
+
+  <div class="lava-line"></div>
+  <footer>
+    <div>
+      <div class="footer-brand">MAYON<span>.</span>PICTURES</div>
+      <div class="footer-tagline">Where Stories Erupt.</div>
+      <div class="footer-copy">© 2024 Mayon Pictures · mayonpictures.com</div>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
+    <div class="footer-col"><h4>Resources</h4><ul><li>Submission Guidelines</li><li>FAQ</li><li>Previous Picks</li><li>Greenlit Projects</li></ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul><li>Instagram</li><li>Facebook</li><li>Contact</li></ul></div>
+  </footer>
+</div>
+
+<script>
+// ===== CURSOR =====
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 80);
+});
+document.querySelectorAll('a, button, .feature-item, .review-card, .genre-pill, .tab, .pitch-row, .latest-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '6px'; cursor.style.height = '6px';
+    ring.style.width = '60px'; ring.style.height = '60px';
+    ring.style.borderColor = 'rgba(232,76,30,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px'; cursor.style.height = '12px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+    ring.style.borderColor = 'rgba(232,76,30,0.5)';
+  });
+});
+
+// ===== PARTICLES =====
+function createParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#e84c1e','#f97316','#d4a843','#ff6b35'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 5 + 2;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${40 + Math.random()*20}%;
+      bottom:${Math.random() * 10}%;
+      --drift:${(Math.random()-0.5)*120}px;
+      animation-duration:${3 + Math.random()*5}s;
+      animation-delay:${Math.random()*4}s;
+    `;
+    container.appendChild(p);
+  }
+}
+createParticles();
+
+// ===== NAVIGATION =====
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== BOX OFFICE DATA =====
+const phMovies = [
+  { rank:1, title:'Laya', badge:'local', weekend:'₱118.2M', total:'₱234.5M', weeks:2, pct:96, change:'NEW' },
+  { rank:2, title:'Makulay ang Buhay', badge:'local', weekend:'₱87.4M', total:'₱412.1M', weeks:4, pct:71, change:'↓1' },
+  { rank:3, title:'Mission: Impossible 9', badge:'intl', weekend:'₱72.1M', total:'₱298.7M', weeks:3, pct:59, change:'↓1' },
+  { rank:4, title:'Batang Quiapo: The Movie', badge:'local', weekend:'₱58.9M', total:'₱680.3M', weeks:7, pct:48, change:'↑1' },
+  { rank:5, title:'Alien: Romulus II', badge:'intl', weekend:'₱44.2M', total:'₱177.4M', weeks:4, pct:36, change:'↓2' },
+  { rank:6, title:'Ang Probinsyano 2', badge:'local', weekend:'₱38.7M', total:'₱521.0M', weeks:8, pct:32, change:'—' },
+  { rank:7, title:'The Dark Ones', badge:'intl', weekend:'₱31.3M', total:'₱99.2M', weeks:5, pct:26, change:'↓1' },
+  { rank:8, title:'Sa Aking Mga Kamay', badge:'local', weekend:'₱24.8M', total:'₱88.9M', weeks:3, pct:20, change:'↓1' },
+  { rank:9, title:'Deadpool 4', badge:'intl', weekend:'₱19.2M', total:'₱312.8M', weeks:9, pct:16, change:'↓2' },
+  { rank:10, title:'Pasay Nights', badge:'local', weekend:'₱12.4M', total:'₱41.2M', weeks:2, pct:10, change:'NEW' },
+];
+
+const intlMovies = [
+  { rank:1, title:'Mission: Impossible 9', badge:'intl', weekend:'$68.4M', total:'$412.8M', weeks:3, pct:100, change:'—' },
+  { rank:2, title:'Alien: Romulus II', badge:'intl', weekend:'$52.1M', total:'$387.3M', weeks:4, pct:76, change:'↓1' },
+  { rank:3, title:'Lilo & Stitch: Reborn', badge:'intl', weekend:'$44.7M', total:'$820.4M', weeks:8, pct:65, change:'↑1' },
+  { rank:4, title:'The Dark Ones', badge:'intl', weekend:'$38.9M', total:'$299.2M', weeks:5, pct:57, change:'↓1' },
+  { rank:5, title:'Deadpool 4', badge:'intl', weekend:'$28.4M', total:'$621.5M', weeks:9, pct:42, change:'—' },
+  { rank:6, title:'Oppenheimer 2', badge:'intl', weekend:'$21.7M', total:'$198.4M', weeks:3, pct:32, change:'↑2' },
+  { rank:7, title:'Fast & Furious 12', badge:'intl', weekend:'$18.3M', total:'$441.2M', weeks:7, pct:27, change:'↓1' },
+  { rank:8, title:'The Matrix: Revolutions II', badge:'intl', weekend:'$14.1M', total:'$134.8M', weeks:4, pct:21, change:'↓2' },
+  { rank:9, title:'Spider-Man: Nova', badge:'intl', weekend:'$11.4M', total:'$892.3M', weeks:14, pct:17, change:'↓1' },
+  { rank:10, title:'Poor Things 2', badge:'intl', weekend:'$7.2M', total:'$88.1M', weeks:6, pct:11, change:'↑1' },
+];
+
+const alltimeMovies = [
+  { rank:1, title:'Ang Probinsyano: The Movie', year:2022, gross:'₱1.42B', notes:'All-time PH record' },
+  { rank:2, title:'Batang Quiapo: The Awakening', year:2023, gross:'₱1.18B', notes:'Highest-grossing 2023' },
+  { rank:3, title:'Darna (2022)', year:2022, gross:'₱980M', notes:'Superhero record' },
+  { rank:4, title:'RPG Metanoia', year:2010, gross:'₱780M', notes:'First animated record holder' },
+  { rank:5, title:'My Little Bossings', year:2013, gross:'₱712M', notes:'MMFF champion' },
+  { rank:6, title:'Enteng Kabisote 10', year:2016, gross:'₱689M', notes:'Long-running franchise' },
+  { rank:7, title:'Victor Magtanggol', year:2019, gross:'₱644M', notes:'Fantasy epic' },
+  { rank:8, title:'Ang Panday', year:2017, gross:'₱601M', notes:'Reimagined classic' },
+  { rank:9, title:'Meant to Be', year:2017, gross:'₱580M', notes:'Romantic record' },
+  { rank:10, title:'Seven Sundays', year:2017, gross:'₱521M', notes:'Ensemble comedy' },
+];
+
+function buildPhTable() {
+  const tbody = document.getElementById('ph-tbody');
+  tbody.innerHTML = phMovies.map(m => `
+    <tr>
+      <td><span class="rank-num ${m.rank<=3?'top3':''}">${String(m.rank).padStart(2,'0')}</span></td>
+      <td>
+        <span class="movie-title-cell">${m.title}</span>
+        <span class="movie-badge badge-${m.badge==='local'?'local':'intl'}">${m.badge==='local'?'LOCAL':'INTL'}</span>
+      </td>
+      <td><span class="revenue-cell">${m.weekend}</span></td>
+      <td><span class="revenue-cell" style="font-size:15px;">${m.total}</span></td>
+      <td style="color:var(--smoke);">${m.weeks}</td>
+      <td class="bar-cell">
+        <div style="font-size:10px; color:var(--smoke); margin-bottom:4px;">${m.pct}% capacity</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${m.pct}%"></div></div>
+      </td>
+      <td><span class="change-badge ${m.change==='NEW'?'change-up':m.change==='—'?'change-same':m.change.startsWith('↑')?'change-up':'change-down'}">${m.change}</span></td>
+    </tr>
+  `).join('');
+}
+
+function buildIntlTable() {
+  const tbody = document.getElementById('intl-tbody');
+  tbody.innerHTML = intlMovies.map(m => `
+    <tr>
+      <td><span class="rank-num ${m.rank<=3?'top3':''}">${String(m.rank).padStart(2,'0')}</span></td>
+      <td><span class="movie-title-cell">${m.title}</span></td>
+      <td><span class="revenue-cell">${m.weekend}</span></td>
+      <td><span class="revenue-cell" style="font-size:15px;">${m.total}</span></td>
+      <td style="color:var(--smoke);">${m.weeks}</td>
+      <td class="bar-cell">
+        <div style="font-size:10px; color:var(--smoke); margin-bottom:4px;">${m.pct}% of #1</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${m.pct}%"></div></div>
+      </td>
+      <td><span class="change-badge ${m.change==='—'?'change-same':m.change.startsWith('↑')?'change-up':'change-down'}">${m.change}</span></td>
+    </tr>
+  `).join('');
+}
+
+function buildAlltimeTable() {
+  const tbody = document.getElementById('alltime-tbody');
+  tbody.innerHTML = alltimeMovies.map(m => `
+    <tr>
+      <td><span class="rank-num ${m.rank<=3?'top3':''}">${String(m.rank).padStart(2,'0')}</span></td>
+      <td><span class="movie-title-cell">${m.title}</span></td>
+      <td style="color:var(--smoke);">${m.year}</td>
+      <td><span class="revenue-cell up">${m.gross}</span></td>
+      <td style="font-size:11px; color:var(--smoke); font-style:italic;">${m.notes}</td>
+      <td></td>
+    </tr>
+  `).join('');
+}
+
+buildPhTable(); buildIntlTable(); buildAlltimeTable();
+
+function switchTab(el, id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['ph','intl','alltime'].forEach(t => {
+    document.getElementById('table-' + t).style.display = t === id ? 'block' : 'none';
+  });
+}
+
+// ===== REVIEWS DATA =====
+const reviewsData = [
+  { score:'9.1', title:'Mahal Kita, Mahal Mo Rin Ba', genre:'Romance · Filipino', runtime:'1h 52m', year:'2024', verdict:'A devastatingly simple love story elevated by performances so honest they border on invasive. It lingers.', reviewer:'JDC', date:'Oct 12' },
+  { score:'7.4', title:'Alien: Romulus II', genre:'Sci-Fi Horror · Hollywood', runtime:'2h 08m', year:'2024', verdict:'Delivers on spectacle and creature design. The second act drags badly, but the finale earns the price of admission.', reviewer:'MRV', date:'Oct 8' },
+  { score:'8.8', title:'Poon ng Dilim', genre:'Horror · Filipino', runtime:'1h 44m', year:'2024', verdict:'The most terrifying use of Filipino folklore in recent memory. It understands that what we do not name cannot be reasoned with.', reviewer:'ABS', date:'Sep 30' },
+  { score:'5.2', title:'Fast & Furious 12', genre:'Action · Hollywood', runtime:'2h 21m', year:'2024', verdict:'At this point the franchise is operating on pure inertia. Loud, expensive, and increasingly difficult to care about.', reviewer:'JDC', date:'Sep 22' },
+  { score:'9.4', title:'Liham Para Sa Bukas', genre:'Drama · Filipino', runtime:'2h 10m', year:'2024', verdict:'Perhaps the finest Filipino film of the decade. Quiet, ruthless, and utterly transformative. See it twice.', reviewer:'MRV', date:'Sep 15' },
+  { score:'6.7', title:'The Dark Ones', genre:'Thriller · Hollywood', runtime:'1h 57m', year:'2024', verdict:'A competently assembled paranoid thriller that never quite achieves the tension it promises. Still watchable.', reviewer:'ABS', date:'Sep 10' },
+];
+
+const barColors = [
+  'background:linear-gradient(to right,#e84c1e,#f97316)',
+  'background:linear-gradient(to right,#3b82f6,#8b5cf6)',
+  'background:linear-gradient(to right,#e84c1e,#9f1239)',
+  'background:linear-gradient(to right,#f59e0b,#ef4444)',
+  'background:linear-gradient(to right,#10b981,#3b82f6)',
+  'background:linear-gradient(to right,#6366f1,#8b5cf6)',
+];
+
+function buildReviews() {
+  const grid = document.getElementById('reviews-grid');
+  grid.innerHTML = reviewsData.map((r,i) => `
+    <div class="review-card">
+      <div class="review-score">${r.score}</div>
+      <div class="review-score-label">/ 10 — Critics Score</div>
+      <div class="review-poster">
+        <div class="poster-placeholder">${r.title.toUpperCase()}</div>
+        <div class="poster-genre-bar" style="${barColors[i]}"></div>
+      </div>
+      <div class="card-tag">${r.genre}</div>
+      <div class="card-title" style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--snow); margin-top:8px;">${r.title}</div>
+      <div class="review-meta">${r.runtime} · ${r.year}</div>
+      <div class="review-verdict">"${r.verdict}"</div>
+      <div class="review-byline">
+        <span>by ${r.reviewer}</span>
+        <span>${r.date}</span>
+      </div>
+    </div>
+  `).join('');
+}
+buildReviews();
+
+// ===== PITCHES DATA =====
+const pitchesData = [
+  { num:'001', name:'Bundok ng Apoy', logline:'A volcanologist must choose between saving her hometown and uncovering the corporate conspiracy that will destroy it.', status:'dev', statusLabel:'In Development' },
+  { num:'002', name:'Mga Naiwan', logline:'Three siblings left behind after their OFW parents disappear must navigate Manila\'s underworld to find them.', status:'review', statusLabel:'Under Review' },
+  { num:'003', name:'Lakas ng Bagyo', logline:'A deaf typhoon relief worker discovers that the disaster was manufactured — and she is the only one who knows.', status:'review', statusLabel:'Under Review' },
+  { num:'004', name:'Bituin sa Bukid', logline:'An aging folk musician from Batanes attempts one last tour through the archipelago before dementia takes her stories forever.', status:'open', statusLabel:'Open for Notes' },
+  { num:'005', name:'Ang Huling Engkanto', logline:'A dying forest spirit recruits a cynical millennial environmentalist to fight a mining corporation extracting what remains of the spirit world.', status:'dev', statusLabel:'In Development' },
+  { num:'006', name:'Baryo ng Hangin', logline:'When a wind energy project displaces an Ilocos farming community, one woman refuses to leave — and starts documenting the resistance.', status:'review', statusLabel:'Under Review' },
+];
+
+function buildPitches() {
+  const feed = document.getElementById('pitches-feed');
+  feed.innerHTML = pitchesData.map(p => `
+    <div class="pitch-row">
+      <div class="pitch-num">${p.num}</div>
+      <div class="pitch-info">
+        <div class="pitch-name">${p.name}</div>
+        <div class="pitch-logline">${p.logline}</div>
+      </div>
+      <div class="pitch-status">
+        <div class="status-badge status-${p.status}">${p.statusLabel}</div>
+      </div>
+    </div>
+  `).join('');
+}
+buildPitches();
+
+// ===== FORM =====
+function togglePill(el) { el.classList.toggle('selected'); }
+
+function updateCount() {
+  const synopsis = document.getElementById('f-synopsis').value;
+  const words = synopsis.trim() ? synopsis.trim().split(/\s+/).length : 0;
+  document.getElementById('charCount').textContent = words + ' / 250 words';
+  document.getElementById('charCount').style.color = words > 250 ? 'var(--lava)' : 'var(--smoke)';
+}
+
+function submitPitch() {
+  const name = document.getElementById('f-name').value;
+  const email = document.getElementById('f-email').value;
+  const title = document.getElementById('f-title').value;
+  const logline = document.getElementById('f-logline').value;
+
+  if (!name || !email || !title || !logline) {
+    showToast('Incomplete Submission', 'Please fill in all required fields.', true);
+    return;
+  }
+
+  showToast('Pitch Submitted!', 'Your story has erupted. We\'ll respond within 30 days.');
+  ['f-name','f-email','f-title','f-logline','f-synopsis','f-format'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('selected'));
+  updateCount();
+}
+
+function showToast(title, msg, isError = false) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  toast.style.borderLeftColor = isError ? '#ef4444' : 'var(--lava)';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+</script>
+</body>
+</html>
