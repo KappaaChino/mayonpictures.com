@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mayon Pictures — Where Stories Erupt</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --void: #060608;
+      --ash: #111114;
+      --cinder: #1c1c22;
+      --slate: #2e2e38;
+      --smoke: #4a4a58;
+      --fog: #888899;
+      --light: #d4d4e0;
+      --white: #f5f0eb;
+      --lava: #ff4d00;
+      --ember: #ff8b00;
+      --magma: #ff2200;
+      --gold: #e8c44a;
+      --glow: rgba(255, 77, 0, 0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--white);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 18px;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ─── CUSTOM CURSOR ─────────────────────────────── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--lava);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, background 0.2s;
+      mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,77,0,0.5);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.18s ease;
+    }
+
+    /* ─── EMBER PARTICLES ────────────────────────────── */
+    #particle-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ─── NAVIGATION ─────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: linear-gradient(to bottom, rgba(6,6,8,0.98) 0%, rgba(6,6,8,0.0) 100%);
+      border-bottom: 1px solid rgba(255,77,0,0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px; height: 36px;
+      position: relative;
+    }
+
+    .logo-icon svg { width: 100%; height: 100%; }
+
+    .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 3px;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .logo-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 4px;
+      color: var(--lava);
+      text-transform: uppercase;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--fog);
+      text-decoration: none;
+      transition: color 0.25s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--lava);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-cta {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--void);
+      background: var(--lava);
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .nav-cta:hover {
+      background: var(--ember);
+      transform: translateY(-1px);
+    }
+
+    /* ─── PAGES ─────────────────────────────────────── */
+    .page {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page.active { display: block; }
+
+    /* ─── HOME PAGE ─────────────────────────────────── */
+    #page-home .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 80%, rgba(255,34,0,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 65% 85%, rgba(255,77,0,0.08) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    .volcano-silhouette {
+      position: absolute;
+      bottom: 0; right: -40px;
+      width: 55vw;
+      opacity: 0.07;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--lava);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(72px, 10vw, 160px);
+      line-height: 0.92;
+      letter-spacing: -2px;
+      color: var(--white);
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s 0.15s ease both;
+    }
+
+    .hero-title span {
+      color: var(--lava);
+      display: block;
+    }
+
+    .hero-tagline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(20px, 2.5vw, 32px);
+      color: var(--light);
+      margin-top: 24px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s 0.3s ease both;
+    }
+
+    .hero-tagline em {
+      color: var(--ember);
+      font-style: normal;
+    }
+
+    .hero-desc {
+      max-width: 500px;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--fog);
+      margin-top: 24px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s 0.45s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s 0.6s ease both;
+    }
+
+    .btn-primary {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      background: var(--lava);
+      color: var(--void);
+      border: none;
+      padding: 16px 36px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 700;
+    }
+
+    .btn-primary:hover {
+      background: var(--ember);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255,77,0,0.3);
+    }
+
+    .btn-ghost {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 16px 36px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--lava);
+      color: var(--lava);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 80px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--smoke);
+      z-index: 1;
+      animation: fadeInUp 0.8s 0.8s ease both;
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--smoke);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ─── SECTION STYLES ────────────────────────────── */
+    .section {
+      padding: 100px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--lava);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(42px, 5vw, 72px);
+      letter-spacing: 1px;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    .section-divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, var(--lava), var(--ember));
+      margin-bottom: 48px;
+    }
+
+    /* ─── HOME: FEATURED ────────────────────────────── */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 2px;
+      margin-top: 48px;
+    }
+
+    .featured-main {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .featured-main-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .featured-main:hover .featured-main-img { transform: scale(1.04); }
+
+    .featured-main-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(6,6,8,0.95) 0%, rgba(6,6,8,0.1) 50%, transparent 100%);
+    }
+
+    .featured-main-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 36px;
+    }
+
+    .featured-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--lava);
+      background: rgba(255,77,0,0.15);
+      padding: 4px 10px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .featured-main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      line-height: 1.2;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .featured-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--fog);
+    }
+
+    .featured-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .featured-card {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .featured-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .featured-card:hover .featured-card-img { transform: scale(1.06); }
+
+    .featured-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(6,6,8,0.9) 0%, transparent 60%);
+    }
+
+    .featured-card-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 20px;
+    }
+
+    .featured-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    /* ─── HOME: STATS TICKER ────────────────────────── */
+    .ticker {
+      background: var(--lava);
+      padding: 14px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ticker-inner {
+      display: inline-flex;
+      gap: 0;
+      animation: ticker 30s linear infinite;
+    }
+
+    .ticker-item {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--void);
+      padding: 0 48px;
+      font-weight: 700;
+    }
+
+    .ticker-item span { color: rgba(6,6,8,0.5); margin: 0 8px; }
+
+    /* ─── HOME: WHAT WE DO ──────────────────────────── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--cinder);
+    }
+
+    .service-card {
+      background: var(--ash);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--lava), var(--ember));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s;
+    }
+
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { background: var(--cinder); }
+
+    .service-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      color: rgba(255,77,0,0.08);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .service-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 20px;
+      color: var(--lava);
+    }
+
+    .service-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .service-desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--fog);
+    }
+
+    /* ─── BOX OFFICE PAGE ────────────────────────────── */
+    .bo-header {
+      padding: 140px 80px 60px;
+      background: linear-gradient(to bottom, var(--ash) 0%, var(--void) 100%);
+      border-bottom: 1px solid var(--cinder);
+    }
+
+    .bo-tabs {
+      display: flex;
+      gap: 0;
+      margin-top: 40px;
+      border-bottom: 1px solid var(--cinder);
+    }
+
+    .bo-tab {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--fog);
+      padding: 16px 32px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+
+    .bo-tab:hover { color: var(--white); }
+    .bo-tab.active {
+      color: var(--lava);
+      border-bottom-color: var(--lava);
+    }
+
+    .bo-content {
+      padding: 60px 80px;
+    }
+
+    .bo-week-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .bo-week-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--fog);
+      text-transform: uppercase;
+    }
+
+    .bo-update {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--smoke);
+      text-transform: uppercase;
+    }
+
+    .bo-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .bo-table thead tr {
+      border-bottom: 1px solid var(--cinder);
+    }
+
+    .bo-table th {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--smoke);
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    .bo-table th:nth-child(n+4) { text-align: right; }
+
+    .bo-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+
+    .bo-table tbody tr:hover { background: rgba(255,77,0,0.04); }
+
+    .bo-table td {
+      padding: 20px 16px;
+      vertical-align: middle;
+    }
+
+    .bo-rank {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--slate);
+      width: 60px;
+    }
+
+    .bo-rank.top { color: var(--lava); }
+
+    .bo-movie-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .bo-poster {
+      width: 48px;
+      height: 68px;
+      background: var(--cinder);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 11px;
+      color: var(--smoke);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .bo-movie-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+
+    .bo-movie-studio {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--smoke);
+    }
+
+    .bo-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 14px;
+      text-align: right;
+      color: var(--light);
+    }
+
+    .bo-num.gross { color: var(--ember); font-weight: 700; }
+    .bo-num.small { font-size: 12px; color: var(--fog); }
+
+    .bo-change {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      text-align: right;
+    }
+
+    .bo-change.up { color: #4ade80; }
+    .bo-change.down { color: var(--magma); }
+    .bo-change.new {
+      color: var(--lava);
+      background: rgba(255,77,0,0.1);
+      padding: 3px 8px;
+      font-size: 9px;
+      letter-spacing: 1px;
+    }
+
+    .bo-bar-wrap {
+      width: 120px;
+      height: 4px;
+      background: var(--cinder);
+      border-radius: 2px;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .bo-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--lava), var(--ember));
+      border-radius: 2px;
+    }
+
+    /* ─── REVIEWS PAGE ──────────────────────────────── */
+    .reviews-header {
+      padding: 140px 80px 60px;
+      background: linear-gradient(to bottom, var(--ash) 0%, var(--void) 100%);
+    }
+
+    .reviews-filter {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .filter-pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border: 1px solid var(--cinder);
+      color: var(--fog);
+      cursor: pointer;
+      background: none;
+      transition: all 0.2s;
+    }
+
+    .filter-pill.active, .filter-pill:hover {
+      border-color: var(--lava);
+      color: var(--white);
+      background: rgba(255,77,0,0.08);
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      padding: 60px 80px;
+    }
+
+    .review-card {
+      background: var(--ash);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s;
+      position: relative;
+    }
+
+    .review-card:hover { transform: translateY(-4px); }
+
+    .review-card:hover .review-img { transform: scale(1.05); }
+
+    .review-img-wrap {
+      height: 280px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .review-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      background: var(--cinder);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .review-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .review-score-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--void);
+      z-index: 2;
+    }
+
+    .score-great { background: #4ade80; }
+    .score-good { background: var(--ember); }
+    .score-avg { background: var(--gold); }
+    .score-bad { background: var(--magma); }
+
+    .review-body {
+      padding: 24px;
+    }
+
+    .review-genre {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--lava);
+      margin-bottom: 8px;
+    }
+
+    .review-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .review-snippet {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--fog);
+      margin-bottom: 20px;
+    }
+
+    .review-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .review-author {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1px;
+      color: var(--smoke);
+    }
+
+    .review-stars {
+      display: flex;
+      gap: 2px;
+    }
+
+    .star {
+      color: var(--ember);
+      font-size: 12px;
+    }
+
+    .star.empty { color: var(--slate); }
+
+    /* ─── PITCHES PAGE ──────────────────────────────── */
+    .pitches-header {
+      padding: 140px 80px 80px;
+      background: linear-gradient(135deg, var(--ash) 0%, var(--void) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pitches-header::before {
+      content: 'PITCH';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 280px;
+      color: rgba(255,77,0,0.03);
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .pitches-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 80px;
+      padding: 80px 80px;
+    }
+
+    .pitch-form-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .pitch-form-section p {
+      font-size: 16px;
+      color: var(--fog);
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--smoke);
+      margin-bottom: 8px;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      background: var(--cinder);
+      border: 1px solid var(--slate);
+      color: var(--white);
+      font-family: 'Crimson Pro', serif;
+      font-size: 16px;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: var(--lava);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-select {
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: var(--ash);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-submit {
+      width: 100%;
+      background: var(--lava);
+      color: var(--void);
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 18px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .form-submit:hover {
+      background: var(--ember);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255,77,0,0.3);
+    }
+
+    .pitch-info-section {
+      padding-top: 16px;
+    }
+
+    .pitch-info-card {
+      background: var(--ash);
+      border: 1px solid var(--cinder);
+      padding: 32px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pitch-info-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--lava), var(--ember));
+    }
+
+    .pitch-info-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--white);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .pitch-info-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--fog);
+    }
+
+    .pitch-requirements {
+      list-style: none;
+      margin-top: 12px;
+    }
+
+    .pitch-requirements li {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: var(--fog);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pitch-requirements li::before {
+      content: '▸';
+      color: var(--lava);
+      flex-shrink: 0;
+    }
+
+    .featured-pitches {
+      padding: 0 80px 80px;
+    }
+
+    .pitch-spotlight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 32px;
+    }
+
+    .pitch-card {
+      background: var(--ash);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+
+    .pitch-card:hover { background: var(--cinder); }
+
+    .pitch-card-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      color: rgba(255,77,0,0.1);
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+
+    .pitch-card-genre {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--lava);
+      margin-bottom: 12px;
+    }
+
+    .pitch-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .pitch-card-logline {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--fog);
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .pitch-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pitch-card-author {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      color: var(--smoke);
+      letter-spacing: 1px;
+    }
+
+    .pitch-card-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      text-transform: uppercase;
+    }
+
+    .status-dev { background: rgba(74,222,128,0.1); color: #4ade80; }
+    .status-review { background: rgba(255,139,0,0.1); color: var(--ember); }
+    .status-open { background: rgba(255,77,0,0.1); color: var(--lava); }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--ash);
+      border-top: 1px solid var(--cinder);
+      padding: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--fog);
+      margin-top: 16px;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--lava);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul li a {
+      font-size: 15px;
+      color: var(--fog);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .footer-col ul li a:hover { color: var(--white); }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid var(--cinder);
+    }
+
+    .footer-copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--smoke);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 20px;
+    }
+
+    .social-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--smoke);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .social-link:hover { color: var(--lava); }
+
+    /* ─── ANIMATIONS ────────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { width: 40px; opacity: 0.5; }
+      50% { width: 60px; opacity: 1; }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,77,0,0.2); }
+      50% { box-shadow: 0 0 40px rgba(255,77,0,0.4); }
+    }
+
+    /* ─── PAGE TRANSITION ────────────────────────────── */
+    .page-transition {
+      position: fixed;
+      inset: 0;
+      background: var(--lava);
+      z-index: 9990;
+      transform: scaleY(0);
+      transform-origin: bottom;
+      pointer-events: none;
+    }
+
+    /* ─── POSTER COLORS (generated backgrounds) ─────── */
+    .poster-1 { background: linear-gradient(135deg, #1a0a00, #3d1500); }
+    .poster-2 { background: linear-gradient(135deg, #000d1a, #001a3d); }
+    .poster-3 { background: linear-gradient(135deg, #0d0014, #1a0033); }
+    .poster-4 { background: linear-gradient(135deg, #001a00, #003300); }
+    .poster-5 { background: linear-gradient(135deg, #1a1400, #332800); }
+    .poster-6 { background: linear-gradient(135deg, #1a000d, #33001a); }
+    .poster-7 { background: linear-gradient(135deg, #00101a, #002033); }
+    .poster-8 { background: linear-gradient(135deg, #0d0d00, #1a1a00); }
+    .poster-9 { background: linear-gradient(135deg, #1a0000, #330000); }
+    .poster-10 { background: linear-gradient(135deg, #001a1a, #003333); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .section { padding: 60px 24px; }
+      .hero { padding: 0 24px !important; }
+      .hero-title { font-size: 56px !important; }
+      .featured-grid { grid-template-columns: 1fr; }
+      .featured-sidebar { flex-direction: row; height: 200px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; padding: 40px 24px; }
+      .pitches-grid { grid-template-columns: 1fr; padding: 40px 24px; }
+      .pitch-spotlight-grid { grid-template-columns: 1fr; padding: 0 24px; }
+      .bo-header { padding: 120px 24px 40px; }
+      .bo-content { padding: 40px 24px; }
+      .reviews-header { padding: 120px 24px 40px; }
+      .pitches-header { padding: 120px 24px 60px; }
+      .featured-pitches { padding: 0 24px 60px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; padding: 0; }
+      footer { padding: 40px 24px; }
+    }
+
+    /* Success state */
+    .success-msg {
+      display: none;
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.3);
+      padding: 20px;
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #4ade80;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Particle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Page Transition -->
+  <div class="page-transition" id="pageTransition"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <a class="nav-logo" onclick="showPage('home')">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 38 L4 14 L12 14 L20 4 L28 14 L36 14 Z" fill="none" stroke="#ff4d00" stroke-width="1.5"/>
+          <path d="M20 38 L8 18 L20 8 L32 18 Z" fill="rgba(255,77,0,0.15)"/>
+          <circle cx="20" cy="22" r="3" fill="#ff4d00"/>
+          <path d="M17 22 Q20 16 23 22" stroke="#ff8b00" stroke-width="1" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">MAYON</div>
+        <span class="logo-sub">PICTURES</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+      <li><a onclick="showPage('boxoffice')" id="nav-boxoffice">Box Office</a></li>
+      <li><a onclick="showPage('reviews')" id="nav-reviews">Reviews</a></li>
+      <li><a onclick="showPage('pitches')" id="nav-pitches">Pitches</a></li>
+    </ul>
+
+    <button class="nav-cta" onclick="showPage('pitches')">Submit Pitch</button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- HOME PAGE -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="page-home" class="page active">
+
+    <!-- Hero -->
+    <section class="hero" style="padding:0 80px">
+      <div class="hero-bg"></div>
+
+      <!-- Volcano SVG silhouette -->
+      <svg class="volcano-silhouette" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M400 0 L0 500 L800 500 Z" fill="white"/>
+        <path d="M400 20 L50 500 L750 500 Z" fill="rgba(255,77,0,0.3)"/>
+        <ellipse cx="400" cy="80" rx="18" ry="70" fill="rgba(255,139,0,0.5)"/>
+        <ellipse cx="400" cy="40" rx="8" ry="40" fill="rgba(255,200,0,0.6)"/>
+      </svg>
+
+      <div class="hero-eyebrow">Est. 2024 · Manila, Philippines</div>
+
+      <h1 class="hero-title">
+        MAYON<span>PICTURES</span>
+      </h1>
+
+      <p class="hero-tagline">Where Stories <em>Erupt.</em></p>
+
+      <p class="hero-desc">
+        A content creation studio born from the volcanic heartlands of the Philippines. We craft films, series, and stories that ignite conversations and leave audiences forever changed.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('reviews')">Explore Reviews</button>
+        <button class="btn-ghost" onclick="showPage('pitches')">Submit Your Pitch</button>
+      </div>
+
+      <div class="hero-scroll">
+        <div class="scroll-line"></div>
+        SCROLL TO DISCOVER
+      </div>
+    </section>
+
+    <!-- Ticker -->
+    <div class="ticker">
+      <div class="ticker-inner" id="tickerInner">
+        <span class="ticker-item">BOX OFFICE LIVE <span>✦</span></span>
+        <span class="ticker-item">FAST & FURIOUS X — ₱485.2M DOMESTIC <span>✦</span></span>
+        <span class="ticker-item">CULION II — ₱120.8M LOCAL <span>✦</span></span>
+        <span class="ticker-item">MISSION: IMPOSSIBLE 8 — $172M GLOBAL OPENING <span>✦</span></span>
+        <span class="ticker-item">HELLO, LOVE, AGAIN — ₱340M PH TOTAL <span>✦</span></span>
+        <span class="ticker-item">REVIEWS UPDATED WEEKLY <span>✦</span></span>
+        <span class="ticker-item">NOW ACCEPTING PITCH SUBMISSIONS <span>✦</span></span>
+        <span class="ticker-item">BOX OFFICE LIVE <span>✦</span></span>
+        <span class="ticker-item">FAST & FURIOUS X — ₱485.2M DOMESTIC <span>✦</span></span>
+        <span class="ticker-item">CULION II — ₱120.8M LOCAL <span>✦</span></span>
+        <span class="ticker-item">MISSION: IMPOSSIBLE 8 — $172M GLOBAL OPENING <span>✦</span></span>
+        <span class="ticker-item">HELLO, LOVE, AGAIN — ₱340M PH TOTAL <span>✦</span></span>
+        <span class="ticker-item">REVIEWS UPDATED WEEKLY <span>✦</span></span>
+        <span class="ticker-item">NOW ACCEPTING PITCH SUBMISSIONS <span>✦</span></span>
+      </div>
+    </div>
+
+    <!-- Featured Content -->
+    <section class="section">
+      <div class="section-label">Featured This Week</div>
+      <div class="section-title">ON OUR RADAR</div>
+      <div class="section-divider"></div>
+
+      <div class="featured-grid">
+        <div class="featured-main" onclick="showPage('reviews')">
+          <div class="review-img-placeholder featured-main-img poster-1" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="rgba(255,77,0,0.4)" stroke-width="1"/><polygon points="20,16 36,24 20,32" fill="rgba(255,77,0,0.6)"/></svg>
+            <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(255,77,0,0.5)">FEATURED REVIEW</span>
+          </div>
+          <div class="featured-main-overlay"></div>
+          <div class="featured-main-content">
+            <div class="featured-tag">Review</div>
+            <div class="featured-main-title">Mula Sa Buwan: A Haunting Return to the Stage and Screen</div>
+            <div class="featured-meta">By Reina Santos · May 2, 2025 · Drama / Musical</div>
+          </div>
+        </div>
+
+        <div class="featured-sidebar">
+          <div class="featured-card" onclick="showPage('boxoffice')">
+            <div class="review-img-placeholder featured-card-img poster-2" style="display:flex;align-items:center;justify-content:center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="24" height="24" stroke="rgba(255,77,0,0.3)" stroke-width="1" fill="none"/><path d="M8 20 L12 12 L18 16 L22 8" stroke="rgba(255,77,0,0.6)" stroke-width="1.5" fill="none"/></svg>
+            </div>
+            <div class="featured-card-overlay"></div>
+            <div class="featured-card-content">
+              <div class="featured-tag" style="font-size:8px;padding:3px 8px">Box Office</div>
+              <div class="featured-card-title">PH B.O. Surges 18% This Quarter</div>
+              <div class="featured-meta" style="font-size:9px">Latest Rankings</div>
+            </div>
+          </div>
+
+          <div class="featured-card" onclick="showPage('pitches')">
+            <div class="review-img-placeholder featured-card-img poster-6" style="display:flex;align-items:center;justify-content:center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 4 L4 28 L16 22 L28 28 Z" stroke="rgba(255,77,0,0.5)" stroke-width="1" fill="rgba(255,77,0,0.1)"/></svg>
+            </div>
+            <div class="featured-card-overlay"></div>
+            <div class="featured-card-content">
+              <div class="featured-tag" style="font-size:8px;padding:3px 8px">Open Call</div>
+              <div class="featured-card-title">Submit Your Film Pitch — Batch 3</div>
+              <div class="featured-meta" style="font-size:9px">Deadline: June 30, 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What We Do -->
+    <section class="section" style="padding-top:0">
+      <div class="section-label">What We Do</div>
+      <div class="section-title">STORIES FROM THE CRATER</div>
+      <div class="section-divider"></div>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-number">01</div>
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2">
+            <circle cx="20" cy="20" r="16"/><polygon points="16,13 32,20 16,27"/>
+          </svg>
+          <div class="service-name">Film & Series Production</div>
+          <div class="service-desc">From script to screen, we produce original Filipino stories with the production value the world deserves to see. Feature films, short films, and streaming series.</div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">02</div>
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M8 10 L32 10 L32 30 L8 30 Z"/><path d="M14 10 L14 30"/><path d="M26 10 L26 30"/><path d="M8 20 L32 20"/>
+          </svg>
+          <div class="service-name">Box Office Tracking</div>
+          <div class="service-desc">We keep our finger on the pulse of both local and international cinema. Weekly rankings, trend analysis, and deep dives into what audiences are actually watching.</div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-number">03</div>
+          <svg class="service-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2">
+            <path d="M8 8 L32 8 L32 28 L22 28 L16 36 L16 28 L8 28 Z"/>
+          </svg>
+          <div class="service-name">Film Criticism & Reviews</div>
+          <div class="service-desc">Sharp, honest, culturally-grounded criticism that goes beyond star ratings. We believe film is literature and treat it accordingly.</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- BOX OFFICE PAGE -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="page-boxoffice" class="page">
+
+    <div class="bo-header">
+      <div class="section-label">Weekend Performance</div>
+      <div class="section-title">BOX OFFICE<br>TRACKER</div>
+      <p style="font-size:16px;color:var(--fog);margin-top:16px;max-width:600px">Weekly rankings for Philippine and international cinema. Data reflects latest available weekend estimates.</p>
+
+      <div class="bo-tabs">
+        <button class="bo-tab active" onclick="switchBOTab('local', this)">🇵🇭 Philippine</button>
+        <button class="bo-tab" onclick="switchBOTab('international', this)">🌐 International</button>
+      </div>
+    </div>
+
+    <!-- Local Box Office -->
+    <div class="bo-content" id="bo-local">
+      <div class="bo-week-label">
+        <span class="bo-week-title">Weekend of May 3–4, 2025</span>
+        <span class="bo-update">Updated: May 5 · Estimates</span>
+      </div>
+
+      <table class="bo-table">
+        <thead>
+          <tr>
+            <th style="width:60px">#</th>
+            <th>Film</th>
+            <th>Wks</th>
+            <th>Weekend Gross</th>
+            <th>Change</th>
+            <th>Total Gross</th>
+            <th style="min-width:140px">Performance</th>
+          </tr>
+        </thead>
+        <tbody id="bo-local-tbody">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- International Box Office -->
+    <div class="bo-content" id="bo-international" style="display:none">
+      <div class="bo-week-label">
+        <span class="bo-week-title">Global Weekend of May 3–4, 2025</span>
+        <span class="bo-update">Updated: May 5 · Estimates</span>
+      </div>
+
+      <table class="bo-table">
+        <thead>
+          <tr>
+            <th style="width:60px">#</th>
+            <th>Film</th>
+            <th>Wks</th>
+            <th>Dom. Weekend</th>
+            <th>Change</th>
+            <th>Worldwide Total</th>
+            <th style="min-width:140px">Performance</th>
+          </tr>
+        </thead>
+        <tbody id="bo-intl-tbody">
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- REVIEWS PAGE -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="page-reviews" class="page">
+
+    <div class="reviews-header">
+      <div class="section-label">Critical Perspectives</div>
+      <div class="section-title">FILM REVIEWS</div>
+      <p style="font-size:16px;color:var(--fog);margin-top:16px;max-width:600px">Honest, culturally grounded film criticism. We watch so you can choose wisely — or argue with us about it.</p>
+
+      <div class="reviews-filter">
+        <button class="filter-pill active" onclick="filterReviews('all', this)">All Films</button>
+        <button class="filter-pill" onclick="filterReviews('philippine', this)">Philippine Cinema</button>
+        <button class="filter-pill" onclick="filterReviews('hollywood', this)">Hollywood</button>
+        <button class="filter-pill" onclick="filterReviews('asian', this)">Asian Cinema</button>
+        <button class="filter-pill" onclick="filterReviews('documentary', this)">Documentary</button>
+      </div>
+    </div>
+
+    <div class="reviews-grid" id="reviews-grid">
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- PITCHES PAGE -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div id="page-pitches" class="page">
+
+    <div class="pitches-header">
+      <div class="section-label">Got a story?</div>
+      <div class="section-title">MOVIE PITCHES</div>
+      <p style="font-size:17px;color:var(--fog);margin-top:16px;max-width:600px;line-height:1.7">Every great film starts with a single idea. We're actively looking for original Filipino stories with global potential. Submit your pitch below.</p>
+    </div>
+
+    <div class="pitches-grid">
+      <!-- Form -->
+      <div class="pitch-form-section">
+        <h2>SUBMIT YOUR PITCH</h2>
+        <p>Tell us your story in a few sentences. We review every submission and respond to those that align with our production slate.</p>
+
+        <div id="pitch-form">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" class="form-input" placeholder="Full name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="you@email.com" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Project Title</label>
+            <input type="text" class="form-input" placeholder="Working title of your film" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Genre</label>
+              <select class="form-select">
+                <option value="">Select genre</option>
+                <option>Drama</option>
+                <option>Thriller / Suspense</option>
+                <option>Horror</option>
+                <option>Comedy</option>
+                <option>Romance</option>
+                <option>Action / Adventure</option>
+                <option>Documentary</option>
+                <option>Animated</option>
+                <option>Science Fiction</option>
+                <option>Fantasy</option>
+                <option>Historical</option>
+                <option>Musical</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Format</label>
+              <select class="form-select">
+                <option value="">Select format</option>
+                <option>Feature Film (90–120 min)</option>
+                <option>Short Film (under 40 min)</option>
+                <option>Streaming Series</option>
+                <option>Mini-Series (3–6 episodes)</option>
+                <option>Documentary Feature</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Logline <span style="color:var(--smoke)">(1–2 sentences)</span></label>
+            <textarea class="form-textarea" placeholder="A one-line description of your story. What happens, to whom, and why it matters..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Synopsis</label>
+            <textarea class="form-textarea" style="min-height:160px" placeholder="A 200–400 word summary of your story. Include the protagonist, central conflict, and resolution..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Why This Story Now?</label>
+            <textarea class="form-textarea" placeholder="Why does this story need to be told in the Philippines today? What's the cultural or social context?"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Portfolio / Sample Work (optional)</label>
+            <input type="text" class="form-input" placeholder="Link to your portfolio, previous work, or script sample" />
+          </div>
+
+          <button class="form-submit" onclick="submitPitch()">IGNITE YOUR STORY →</button>
+          <div class="success-msg" id="pitch-success">✦ YOUR PITCH HAS BEEN RECEIVED. WE'LL BE IN TOUCH WITHIN 3–4 WEEKS.</div>
+        </div>
+      </div>
+
+      <!-- Info Panel -->
+      <div class="pitch-info-section">
+        <div class="pitch-info-card">
+          <div class="pitch-info-title">WHAT WE'RE LOOKING FOR</div>
+          <div class="pitch-info-text">We champion stories rooted in the Filipino experience — stories that resonate locally and travel globally. We're particularly interested in:</div>
+          <ul class="pitch-requirements">
+            <li>Untold regional and provincial stories</li>
+            <li>Contemporary Filipino social realities</li>
+            <li>Mythological or folk horror reinventions</li>
+            <li>Cross-cultural and diaspora narratives</li>
+            <li>Genre films with Filipino soul</li>
+            <li>Documentary subjects with cinematic potential</li>
+          </ul>
+        </div>
+
+        <div class="pitch-info-card">
+          <div class="pitch-info-title">SUBMISSION GUIDELINES</div>
+          <ul class="pitch-requirements">
+            <li>Filipino citizenship or residency preferred</li>
+            <li>Original material only — no adaptations without rights</li>
+            <li>Scripts not required for initial submission</li>
+            <li>One active pitch per writer at a time</li>
+            <li>Response time: 3–4 weeks</li>
+            <li>Batch 3 deadline: June 30, 2025</li>
+          </ul>
+        </div>
+
+        <div class="pitch-info-card" style="background:rgba(255,77,0,0.06);border-color:rgba(255,77,0,0.15)">
+          <div class="pitch-info-title" style="color:var(--lava)">DEVELOPMENT FUND</div>
+          <div class="pitch-info-text">Selected pitches may receive development funding of up to ₱500,000 for script development, attached to a first-look deal with Mayon Pictures.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotlight Pitches -->
+    <div class="featured-pitches">
+      <div class="section-label">In Development</div>
+      <div class="section-title">PITCH SPOTLIGHT</div>
+      <div class="section-divider"></div>
+
+      <div class="pitch-spotlight-grid">
+        <div class="pitch-card">
+          <div class="pitch-card-number">01</div>
+          <div class="pitch-card-genre">Horror · Folklore</div>
+          <div class="pitch-card-title">Ang Babaeng Walang Anino</div>
+          <div class="pitch-card-logline">"In a Quezon province town, a schoolteacher discovers her shadow has been replaced by something ancient — and hungry."</div>
+          <div class="pitch-card-meta">
+            <span class="pitch-card-author">J. MENDOZA</span>
+            <span class="pitch-card-status status-dev">In Development</span>
+          </div>
+        </div>
+
+        <div class="pitch-card">
+          <div class="pitch-card-number">02</div>
+          <div class="pitch-card-genre">Drama · Diaspora</div>
+          <div class="pitch-card-title">The Distance Between Pasig and London</div>
+          <div class="pitch-card-logline">"Two siblings on opposite sides of the world must decide what home means when their mother falls ill and calls them back."</div>
+          <div class="pitch-card-meta">
+            <span class="pitch-card-author">C. REYES</span>
+            <span class="pitch-card-status status-review">Under Review</span>
+          </div>
+        </div>
+
+        <div class="pitch-card">
+          <div class="pitch-card-number">03</div>
+          <div class="pitch-card-genre">Thriller · Political</div>
+          <div class="pitch-card-title">Kalawang</div>
+          <div class="pitch-card-logline">"A forensic accountant uncovers a decades-old corruption network that goes all the way to someone she calls family."</div>
+          <div class="pitch-card-meta">
+            <span class="pitch-card-author">M. SANTOS</span>
+            <span class="pitch-card-status status-open">Open Submission</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── FOOTER ──────────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="nav-logo" onclick="showPage('home')" style="text-decoration:none">
+          <div class="logo-icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 38 L4 14 L12 14 L20 4 L28 14 L36 14 Z" fill="none" stroke="#ff4d00" stroke-width="1.5"/>
+              <path d="M20 38 L8 18 L20 8 L32 18 Z" fill="rgba(255,77,0,0.15)"/>
+              <circle cx="20" cy="22" r="3" fill="#ff4d00"/>
+              <path d="M17 22 Q20 16 23 22" stroke="#ff8b00" stroke-width="1" fill="none"/>
+            </svg>
+          </div>
+          <div>
+            <div class="logo-text">MAYON</div>
+            <span class="logo-sub">PICTURES</span>
+          </div>
+        </a>
+        <p>A Filipino content creation studio. We produce films, track cinema, and amplify the stories that need to be told. Named after the perfect volcano.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a onclick="showPage('home')">Home</a></li>
+          <li><a onclick="showPage('boxoffice')">Box Office</a></li>
+          <li><a onclick="showPage('reviews')">Reviews</a></li>
+          <li><a onclick="showPage('pitches')">Pitches</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Features</h4>
+        <ul>
+          <li><a>PH Box Office Charts</a></li>
+          <li><a>Global Rankings</a></li>
+          <li><a>Film Criticism</a></li>
+          <li><a>Pitch Portal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul>
+          <li><a>Instagram</a></li>
+          <li><a>Facebook</a></li>
+          <li><a>YouTube</a></li>
+          <li><a>hello@mayonpictures.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Mayon Pictures. All rights reserved. · mayonpictures.com</div>
+      <div class="footer-social">
+        <a class="social-link">IG</a>
+        <a class="social-link">FB</a>
+        <a class="social-link">YT</a>
+        <a class="social-link">TT</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── CURSOR ──────────────────────────────────────────────────
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+    const animRing = () => { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; cursorRing.style.left = rx + 'px'; cursorRing.style.top = ry + 'px'; requestAnimationFrame(animRing); };
+    animRing();
+
+    // ─── PARTICLE SYSTEM ─────────────────────────────────────────
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+    const particles = [];
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + 10;
+        this.size = Math.random() * 2.5 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.8;
+        this.speedY = -(Math.random() * 1.5 + 0.3);
+        this.alpha = Math.random() * 0.5 + 0.2;
+        this.color = Math.random() > 0.5 ? '#ff4d00' : '#ff8b00';
+        this.life = 0;
+        this.maxLife = Math.random() * 200 + 100;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life++;
+        this.alpha = (1 - this.life / this.maxLife) * 0.4;
+        if (this.life >= this.maxLife) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 60; i++) {
+      const p = new Particle();
+      p.life = Math.random() * p.maxLife;
+      particles.push(p);
+    }
+
+    const animParticles = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animParticles);
+    };
+    animParticles();
+
+    // ─── PAGE NAVIGATION ─────────────────────────────────────────
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      const navEl = document.getElementById('nav-' + name);
+      if (navEl) navEl.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ─── BOX OFFICE DATA ─────────────────────────────────────────
+    const localMovies = [
+      { rank:1, title:"Hello, Love, Again", studio:"Star Cinema / ALV", weeks:4, weekend:"₱38.2M", change:"new", total:"₱340.6M", pct:100 },
+      { rank:2, title:"Mula Sa Buwan: Digitally Remastered", studio:"Nine Works Theatrical", weeks:2, weekend:"₱22.5M", change:"+4%", total:"₱88.1M", pct:59, dir:"up" },
+      { rank:3, title:"Culion II: Ang Pagbabalik", studio:"TBA Studios", weeks:3, weekend:"₱17.8M", change:"-12%", total:"₱120.8M", pct:47, dir:"down" },
+      { rank:4, title:"Liway 2", studio:"Artikulo Uno Prods.", weeks:1, weekend:"₱14.3M", change:"new", total:"₱14.3M", pct:37 },
+      { rank:5, title:"Ang Babae sa Likod ng Salamin", studio:"Viva Films", weeks:5, weekend:"₱9.1M", change:"-22%", total:"₱210.4M", pct:24, dir:"down" },
+      { rank:6, title:"Bato ng Apoy", studio:"Mayon Pictures", weeks:2, weekend:"₱7.6M", change:"+8%", total:"₱28.9M", pct:20, dir:"up" },
+      { rank:7, title:"Harana sa Dagat", studio:"GMA Films", weeks:4, weekend:"₱5.4M", change:"-18%", total:"₱74.2M", pct:14, dir:"down" },
+      { rank:8, title:"Araw ng Patay", studio:"Black Sheep", weeks:6, weekend:"₱3.9M", change:"-9%", total:"₱185.5M", pct:10, dir:"down" },
+      { rank:9, title:"Lumayo Ka Nga Sa Akin 3", studio:"Regal Films", weeks:7, weekend:"₱2.7M", change:"-15%", total:"₱96.3M", pct:7, dir:"down" },
+      { rank:10, title:"Pag-ibig Sa Panahon ng Digma", studio:"Cinema One Originals", weeks:3, weekend:"₱1.8M", change:"-6%", total:"₱22.1M", pct:5, dir:"down" },
+    ];
+
+    const intlMovies = [
+      { rank:1, title:"Mission: Impossible — The Final Reckoning", studio:"Paramount Pictures", weeks:1, weekend:"$67.8M", change:"new", total:"$172.3M", pct:100 },
+      { rank:2, title:"Thunderbolts*", studio:"Marvel Studios", weeks:3, weekend:"$34.2M", change:"-41%", total:"$289.6M", pct:50, dir:"down" },
+      { rank:3, title:"How to Train Your Dragon (Live-Action)", studio:"Universal / DreamWorks", weeks:2, weekend:"$28.6M", change:"-28%", total:"$196.4M", pct:42, dir:"down" },
+      { rank:4, title:"Final Destination Bloodlines", studio:"New Line Cinema", weeks:2, weekend:"$21.4M", change:"-35%", total:"$112.7M", pct:32, dir:"down" },
+      { rank:5, title:"Lilo & Stitch", studio:"Disney", weeks:3, weekend:"$16.3M", change:"-19%", total:"$422.1M", pct:24, dir:"down" },
+      { rank:6, title:"Materialists", studio:"A24", weeks:1, weekend:"$12.8M", change:"new", total:"$12.8M", pct:19 },
+      { rank:7, title:"Karate Kid: Legends", studio:"Sony Pictures", weeks:4, weekend:"$8.9M", change:"-22%", total:"$87.3M", pct:13, dir:"down" },
+      { rank:8, title:"Until Dawn", studio:"Sony Screen Gems", weeks:2, weekend:"$6.1M", change:"-44%", total:"$37.5M", pct:9, dir:"down" },
+      { rank:9, title:"Nonnas", studio:"Netflix / Theatrical", weeks:1, weekend:"$4.7M", change:"new", total:"$4.7M", pct:7 },
+      { rank:10, title:"A Minecraft Movie", studio:"Warner Bros.", weeks:6, weekend:"$3.2M", change:"-31%", total:"$882.5M", pct:5, dir:"down" },
+    ];
+
+    function renderBOTable(data, tbodyId) {
+      const tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = data.map((m, i) => `
+        <tr>
+          <td class="bo-rank ${m.rank <= 3 ? 'top' : ''}">${m.rank}</td>
+          <td>
+            <div class="bo-movie-info">
+              <div class="bo-poster poster-${(i % 10) + 1}">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="rgba(255,77,0,0.3)" stroke-width="1"/><polygon points="8,6 16,10 8,14" fill="rgba(255,77,0,0.5)"/></svg>
+              </div>
+              <div>
+                <div class="bo-movie-title">${m.title}</div>
+                <div class="bo-movie-studio">${m.studio}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="bo-num small">${m.weeks}</span></td>
+          <td><span class="bo-num gross">${m.weekend}</span></td>
+          <td><span class="bo-change ${m.change === 'new' ? 'new' : m.dir === 'up' ? 'up' : 'down'}">${m.change === 'new' ? 'NEW' : m.change}</span></td>
+          <td><span class="bo-num">${m.total}</span></td>
+          <td>
+            <div class="bo-bar-wrap">
+              <div class="bo-bar" style="width:${m.pct}%"></div>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    renderBOTable(localMovies, 'bo-local-tbody');
+    renderBOTable(intlMovies, 'bo-intl-tbody');
+
+    function switchBOTab(tab, el) {
+      document.querySelectorAll('.bo-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('bo-local').style.display = tab === 'local' ? 'block' : 'none';
+      document.getElementById('bo-international').style.display = tab === 'international' ? 'block' : 'none';
+    }
+
+    // ─── REVIEWS DATA ─────────────────────────────────────────────
+    const reviewsData = [
+      { title:"Mula Sa Buwan", genre:"Drama · Musical", cat:"philippine", score:"9.4", scoreClass:"score-great", stars:5, author:"Reina Santos", date:"May 2, 2025", snippet:"A film that dares to be both achingly beautiful and politically urgent. Geronimo's adaptation transcends its stage origins to become pure cinema." },
+      { title:"Thunderbolts*", genre:"Action · Superhero", cat:"hollywood", score:"7.1", scoreClass:"score-good", stars:3.5, author:"Marco Villarosa", date:"Apr 28, 2025", snippet:"Marvel finally remembers that its best films are character studies wearing superhero costumes. Not perfect, but a genuine return to form." },
+      { title:"Culion II", genre:"Drama · Historical", cat:"philippine", score:"8.8", scoreClass:"score-great", stars:4.5, author:"Lian Cruz", date:"Apr 24, 2025", snippet:"The sequel no one asked for turns out to be the one everyone needed. A tender, devastating portrait of resilience set against a forgotten chapter of history." },
+      { title:"Araw ng Patay", genre:"Horror · Comedy", cat:"philippine", score:"6.5", scoreClass:"score-avg", stars:3, author:"Reina Santos", date:"Apr 20, 2025", snippet:"More comedy than horror, which would be fine if the laughs landed with more consistency. A fun Halloween watch that rarely digs deeper than it should." },
+      { title:"Materialists", genre:"Romance · Drama", cat:"hollywood", score:"8.2", scoreClass:"score-great", stars:4, author:"Marco Villarosa", date:"May 3, 2025", snippet:"A quiet, devastating film about love and its discontents. Gerwig's camera never judges its characters, and the result is something genuinely wise." },
+      { title:"Monster (Kaibutsu)", genre:"Drama", cat:"asian", score:"9.7", scoreClass:"score-great", stars:5, author:"Lian Cruz", date:"Apr 15, 2025", snippet:"Kore-eda's masterwork asks one simple question and spends two hours proving there is no simple answer. One of the decade's finest films." },
+      { title:"Liway 2", genre:"Drama · Political", cat:"philippine", score:"7.8", scoreClass:"score-good", stars:4, author:"Reina Santos", date:"May 1, 2025", snippet:"Follows in its predecessor's footsteps with conviction if not always with the same devastating emotional precision. Still essential Filipino cinema." },
+      { title:"Final Destination Bloodlines", genre:"Horror · Thriller", cat:"hollywood", score:"5.4", scoreClass:"score-bad", stars:2.5, author:"Marco Villarosa", date:"Apr 18, 2025", snippet:"The kills are creative. The rest is thin. A franchise going through the motions with impressive stunt coordination and forgettable everything else." },
+      { title:"Nagsimula Sa Puso", genre:"Documentary", cat:"documentary", score:"8.5", scoreClass:"score-great", stars:4.5, author:"Lian Cruz", date:"Apr 10, 2025", snippet:"A documentary that restores your faith in human connection. Intimate, unhurried, and profoundly moving — the kind of film that changes how you see strangers." },
+    ];
+
+    function renderStars(n) {
+      let s = '';
+      for (let i = 1; i <= 5; i++) {
+        if (i <= Math.floor(n)) s += '<span class="star">★</span>';
+        else if (i - 0.5 <= n) s += '<span class="star" style="opacity:0.5">★</span>';
+        else s += '<span class="star empty">★</span>';
+      }
+      return s;
+    }
+
+    function renderReviews(data) {
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = data.map((r, i) => `
+        <div class="review-card" data-cat="${r.cat}">
+          <div class="review-img-wrap">
+            <div class="review-img poster-${(i % 10) + 1}" style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="rgba(255,77,0,0.3)" stroke-width="1.5"/><polygon points="16,12 32,20 16,28" fill="rgba(255,77,0,0.5)"/></svg>
+              <span style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:rgba(255,77,0,0.4);text-transform:uppercase">${r.genre.split('·')[0].trim()}</span>
+            </div>
+            <div class="review-score-badge ${r.scoreClass}">${r.score}</div>
+          </div>
+          <div class="review-body">
+            <div class="review-genre">${r.genre}</div>
+            <div class="review-title">${r.title}</div>
+            <div class="review-snippet">${r.snippet}</div>
+            <div class="review-footer">
+              <div class="review-author">${r.author} · ${r.date}</div>
+              <div class="review-stars">${renderStars(r.stars)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    renderReviews(reviewsData);
+
+    function filterReviews(cat, el) {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      const filtered = cat === 'all' ? reviewsData : reviewsData.filter(r => r.cat === cat);
+      renderReviews(filtered);
+    }
+
+    // ─── PITCH FORM ───────────────────────────────────────────────
+    function submitPitch() {
+      const inputs = document.querySelectorAll('#pitch-form .form-input, #pitch-form .form-textarea, #pitch-form .form-select');
+      let valid = false;
+      inputs.forEach(i => { if (i.value.trim()) valid = true; });
+      if (!valid) { alert('Please fill in at least some fields before submitting.'); return; }
+      document.getElementById('pitch-success').style.display = 'block';
+      document.querySelector('.form-submit').style.display = 'none';
+      document.getElementById('pitch-success').scrollIntoView({ behavior: 'smooth' });
+    }
+
+  </script>
+</body>
+</html>
