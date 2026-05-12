@@ -1368,69 +1368,75 @@
 
   <div class="weekly-stats" style="margin: 0 48px; margin-top: 48px;">
     <div class="stat-box">
-      <div class="stat-label">Total Weekend Gross (PH)</div>
-      <div class="stat-value">₱482M</div>
-      <div class="stat-sub">↑ 12% vs last weekend</div>
+      <div class="stat-label">PH Weekend #1 Film</div>
+      <div class="stat-value">TDWP2</div>
+      <div class="stat-sub">The Devil Wears Prada 2 · Week 1</div>
     </div>
     <div class="stat-box">
-      <div class="stat-label">Films in Wide Release</div>
-      <div class="stat-value">23</div>
-      <div class="stat-sub">8 local · 15 international</div>
+      <div class="stat-label">PH Films Charting</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">Weekend 17 · Apr 29–May 3, 2026</div>
     </div>
     <div class="stat-box">
-      <div class="stat-label">#1 Film Gross</div>
-      <div class="stat-value">₱118M</div>
-      <div class="stat-sub">Opening weekend record attempt</div>
+      <div class="stat-label">US Weekend #1 Film</div>
+      <div class="stat-value">TDWP2</div>
+      <div class="stat-sub">The Devil Wears Prada 2 · $41.6M</div>
     </div>
     <div class="stat-box">
-      <div class="stat-label">Cumulative Local Total</div>
-      <div class="stat-value">₱2.1B</div>
-      <div class="stat-sub">Year-to-date, Philippine box office</div>
+      <div class="stat-label">PH All-Time Record</div>
+      <div class="stat-value">₱1.6B</div>
+      <div class="stat-sub">Hello, Love, Again (2024)</div>
     </div>
   </div>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab(this, 'ph')">Philippine Charts</div>
-    <div class="tab" onclick="switchTab(this, 'intl')">International Charts</div>
-    <div class="tab" onclick="switchTab(this, 'alltime')">All-Time PH Records</div>
+    <div class="tab active" onclick="switchTab(this, 'ph')">PH Weekly Box Office</div>
+    <div class="tab" onclick="switchTab(this, 'intl')">US Weekly Box Office</div>
+    <div class="tab" onclick="switchTab(this, 'alltime')">PH All Time Box Office</div>
   </div>
 
   <div class="bo-content">
+    <!-- PH WEEKLY -->
     <div id="table-ph" class="bo-table-wrap">
+      <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
+        Source: <a href="https://www.boxofficemojo.com/weekend/2026W17/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo — Philippine Weekend 17, April 29–May 3, 2026</a>
+      </p>
       <table>
         <thead>
           <tr>
             <th>#</th>
             <th>Title</th>
-            <th>Weekend Gross</th>
-            <th>Running Total</th>
-            <th>Weeks</th>
-            <th>Performance</th>
-            <th>Change</th>
+            <th>Weeks in Release</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody id="ph-tbody"></tbody>
       </table>
     </div>
 
+    <!-- US WEEKLY -->
     <div id="table-intl" class="bo-table-wrap" style="display:none">
+      <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
+        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers — US Weekend Domestic Box Office, May 8–10, 2026</a>
+      </p>
       <table>
         <thead>
           <tr>
             <th>#</th>
             <th>Title</th>
-            <th>Weekend Gross (Global)</th>
-            <th>Worldwide Total</th>
-            <th>Weeks</th>
-            <th>Performance</th>
-            <th>Change</th>
+            <th>Weeks in Release</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody id="intl-tbody"></tbody>
       </table>
     </div>
 
+    <!-- PH ALL TIME -->
     <div id="table-alltime" class="bo-table-wrap" style="display:none">
+      <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
+        Source: <a href="https://en.wikipedia.org/wiki/List_of_highest-grossing_Philippine_films" target="_blank" style="color:var(--lava); text-decoration:none;">Wikipedia — List of Highest-Grossing Philippine Films</a> · Top 20 by gross earnings
+      </p>
       <table>
         <thead>
           <tr>
@@ -1438,8 +1444,7 @@
             <th>Title</th>
             <th>Year</th>
             <th>All-Time PH Gross</th>
-            <th>Notes</th>
-            <th></th>
+            <th>Production</th>
           </tr>
         </thead>
         <tbody id="alltime-tbody"></tbody>
@@ -1666,62 +1671,72 @@ function navigate(page) {
 }
 
 // ===== BOX OFFICE DATA =====
+
+// PH WEEKLY — Source: Box Office Mojo · Philippine Weekend 17, Apr 29–May 3 2026
+// https://www.boxofficemojo.com/weekend/2026W17/?area=PH
 const phMovies = [
-  { rank:1, title:'Laya', badge:'local', weekend:'₱118.2M', total:'₱234.5M', weeks:2, pct:96, change:'NEW' },
-  { rank:2, title:'Makulay ang Buhay', badge:'local', weekend:'₱87.4M', total:'₱412.1M', weeks:4, pct:71, change:'↓1' },
-  { rank:3, title:'Mission: Impossible 9', badge:'intl', weekend:'₱72.1M', total:'₱298.7M', weeks:3, pct:59, change:'↓1' },
-  { rank:4, title:'Batang Quiapo: The Movie', badge:'local', weekend:'₱58.9M', total:'₱680.3M', weeks:7, pct:48, change:'↑1' },
-  { rank:5, title:'Alien: Romulus II', badge:'intl', weekend:'₱44.2M', total:'₱177.4M', weeks:4, pct:36, change:'↓2' },
-  { rank:6, title:'Ang Probinsyano 2', badge:'local', weekend:'₱38.7M', total:'₱521.0M', weeks:8, pct:32, change:'—' },
-  { rank:7, title:'The Dark Ones', badge:'intl', weekend:'₱31.3M', total:'₱99.2M', weeks:5, pct:26, change:'↓1' },
-  { rank:8, title:'Sa Aking Mga Kamay', badge:'local', weekend:'₱24.8M', total:'₱88.9M', weeks:3, pct:20, change:'↓1' },
-  { rank:9, title:'Deadpool 4', badge:'intl', weekend:'₱19.2M', total:'₱312.8M', weeks:9, pct:16, change:'↓2' },
-  { rank:10, title:'Pasay Nights', badge:'local', weekend:'₱12.4M', total:'₱41.2M', weeks:2, pct:10, change:'NEW' },
+  { rank:1, title:'The Devil Wears Prada 2', weeks:1 },
+  { rank:2, title:'Michael', weeks:2 },
+  { rank:3, title:'The Super Mario Galaxy Movie', weeks:5 },
+  { rank:4, title:'Ready or Not 2: Here I Come', weeks:6 },
 ];
 
+// US WEEKLY — Source: The Numbers · US Weekend Domestic Box Office, May 8–10 2026
+// https://www.the-numbers.com/weekend-box-office-chart
 const intlMovies = [
-  { rank:1, title:'Mission: Impossible 9', badge:'intl', weekend:'$68.4M', total:'$412.8M', weeks:3, pct:100, change:'—' },
-  { rank:2, title:'Alien: Romulus II', badge:'intl', weekend:'$52.1M', total:'$387.3M', weeks:4, pct:76, change:'↓1' },
-  { rank:3, title:'Lilo & Stitch: Reborn', badge:'intl', weekend:'$44.7M', total:'$820.4M', weeks:8, pct:65, change:'↑1' },
-  { rank:4, title:'The Dark Ones', badge:'intl', weekend:'$38.9M', total:'$299.2M', weeks:5, pct:57, change:'↓1' },
-  { rank:5, title:'Deadpool 4', badge:'intl', weekend:'$28.4M', total:'$621.5M', weeks:9, pct:42, change:'—' },
-  { rank:6, title:'Oppenheimer 2', badge:'intl', weekend:'$21.7M', total:'$198.4M', weeks:3, pct:32, change:'↑2' },
-  { rank:7, title:'Fast & Furious 12', badge:'intl', weekend:'$18.3M', total:'$441.2M', weeks:7, pct:27, change:'↓1' },
-  { rank:8, title:'The Matrix: Revolutions II', badge:'intl', weekend:'$14.1M', total:'$134.8M', weeks:4, pct:21, change:'↓2' },
-  { rank:9, title:'Spider-Man: Nova', badge:'intl', weekend:'$11.4M', total:'$892.3M', weeks:14, pct:17, change:'↓1' },
-  { rank:10, title:'Poor Things 2', badge:'intl', weekend:'$7.2M', total:'$88.1M', weeks:6, pct:11, change:'↑1' },
+  { rank:1,  title:'The Devil Wears Prada 2', weeks:2 },
+  { rank:2,  title:'Mortal Kombat II', weeks:1 },
+  { rank:3,  title:'Michael', weeks:3 },
+  { rank:4,  title:'The Sheep Detectives', weeks:1 },
+  { rank:5,  title:'Billie Eilish: Hit Me Hard and Soft — The Tour', weeks:1 },
+  { rank:6,  title:'The Super Mario Galaxy Movie', weeks:6 },
+  { rank:7,  title:'Project Hail Mary', weeks:8 },
+  { rank:8,  title:'Hokum', weeks:2 },
+  { rank:9,  title:'Deep Water', weeks:2 },
+  { rank:10, title:'Animal Farm', weeks:2 },
+  { rank:11, title:"Lee Cronin's The Mummy", weeks:4 },
+  { rank:12, title:'The Drama', weeks:6 },
 ];
 
+// PH ALL TIME TOP 20 — Source: Wikipedia · List of Highest-Grossing Philippine Films
+// https://en.wikipedia.org/wiki/List_of_highest-grossing_Philippine_films
 const alltimeMovies = [
-  { rank:1, title:'Ang Probinsyano: The Movie', year:2022, gross:'₱1.42B', notes:'All-time PH record' },
-  { rank:2, title:'Batang Quiapo: The Awakening', year:2023, gross:'₱1.18B', notes:'Highest-grossing 2023' },
-  { rank:3, title:'Darna (2022)', year:2022, gross:'₱980M', notes:'Superhero record' },
-  { rank:4, title:'RPG Metanoia', year:2010, gross:'₱780M', notes:'First animated record holder' },
-  { rank:5, title:'My Little Bossings', year:2013, gross:'₱712M', notes:'MMFF champion' },
-  { rank:6, title:'Enteng Kabisote 10', year:2016, gross:'₱689M', notes:'Long-running franchise' },
-  { rank:7, title:'Victor Magtanggol', year:2019, gross:'₱644M', notes:'Fantasy epic' },
-  { rank:8, title:'Ang Panday', year:2017, gross:'₱601M', notes:'Reimagined classic' },
-  { rank:9, title:'Meant to Be', year:2017, gross:'₱580M', notes:'Romantic record' },
-  { rank:10, title:'Seven Sundays', year:2017, gross:'₱521M', notes:'Ensemble comedy' },
+  { rank:1,  title:'Hello, Love, Again',               year:2024, gross:'₱1.60B', prod:'ABS-CBN Studios / Star Cinema / GMA Pictures' },
+  { rank:2,  title:'Rewind',                           year:2023, gross:'₱924M',  prod:'Star Cinema / APT Entertainment / AgostoDos Pictures' },
+  { rank:3,  title:'Hello, Love, Goodbye',             year:2019, gross:'₱880M',  prod:'Star Cinema' },
+  { rank:4,  title:'The Hows of Us',                   year:2018, gross:'₱810M',  prod:'Star Cinema' },
+  { rank:5,  title:'The Super Parental Guardians',     year:2016, gross:'₱598M',  prod:'Star Cinema' },
+  { rank:6,  title:'Fantastica',                       year:2018, gross:'₱596M',  prod:'Star Cinema / Viva Films' },
+  { rank:7,  title:'Starting Over Again',              year:2014, gross:'₱579M',  prod:'Star Cinema' },
+  { rank:8,  title:'Gandarrapiddo: The Revenger Squad',year:2017, gross:'₱571M',  prod:'Star Cinema / Viva Films' },
+  { rank:9,  title:'A Second Chance',                  year:2015, gross:'₱556M',  prod:'Star Cinema' },
+  { rank:10, title:'Miracle in Cell No. 7',            year:2019, gross:'₱543M',  prod:'Viva Films' },
+  { rank:11, title:'Beauty and the Bestie',            year:2015, gross:'₱526M',  prod:'Star Cinema / Viva Films' },
+  { rank:12, title:'And the Breadwinner Is...',        year:2024, gross:'₱460M',  prod:'ABS-CBN Studios / Star Cinema / The IdeaFirst Company' },
+  { rank:13, title:'The Amazing Praybeyt Benjamin',    year:2014, gross:'₱456M',  prod:'Star Cinema / Viva Films' },
+  { rank:14, title:'Un/Happy for You',                 year:2024, gross:'₱450M',  prod:'ABS-CBN Studios / Star Cinema / Viva Films' },
+  { rank:15, title:'Girl, Boy, Bakla, Tomboy',         year:2013, gross:'₱436M',  prod:'Star Cinema / Viva Films' },
+  { rank:16, title:'It Takes a Man and a Woman',       year:2013, gross:'₱405M',  prod:'Star Cinema / Viva Films' },
+  { rank:17, title:'My Ex and Whys',                   year:2017, gross:'₱400M',  prod:'Star Cinema' },
+  { rank:18, title:'Sisterakas',                       year:2012, gross:'₱393M',  prod:'Star Cinema / Viva Films' },
+  { rank:19, title:'Call Me Mother',                   year:2025, gross:'₱392M',  prod:'Star Cinema / The IdeaFirst Company / Viva Films' },
+  { rank:20, title:'My Bebe Love: KiligPaMore',        year:2015, gross:'₱385M',  prod:'GMA Pictures / APT Entertainment' },
 ];
+
+function weekBadge(w) {
+  return w === 1
+    ? '<span class="change-badge change-up">NEW</span>'
+    : `<span class="change-badge change-same">Week ${w}</span>`;
+}
 
 function buildPhTable() {
   const tbody = document.getElementById('ph-tbody');
   tbody.innerHTML = phMovies.map(m => `
     <tr>
       <td><span class="rank-num ${m.rank<=3?'top3':''}">${String(m.rank).padStart(2,'0')}</span></td>
-      <td>
-        <span class="movie-title-cell">${m.title}</span>
-        <span class="movie-badge badge-${m.badge==='local'?'local':'intl'}">${m.badge==='local'?'LOCAL':'INTL'}</span>
-      </td>
-      <td><span class="revenue-cell">${m.weekend}</span></td>
-      <td><span class="revenue-cell" style="font-size:15px;">${m.total}</span></td>
+      <td><span class="movie-title-cell">${m.title}</span></td>
       <td style="color:var(--smoke);">${m.weeks}</td>
-      <td class="bar-cell">
-        <div style="font-size:10px; color:var(--smoke); margin-bottom:4px;">${m.pct}% capacity</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${m.pct}%"></div></div>
-      </td>
-      <td><span class="change-badge ${m.change==='NEW'?'change-up':m.change==='—'?'change-same':m.change.startsWith('↑')?'change-up':'change-down'}">${m.change}</span></td>
+      <td>${weekBadge(m.weeks)}</td>
     </tr>
   `).join('');
 }
@@ -1732,14 +1747,8 @@ function buildIntlTable() {
     <tr>
       <td><span class="rank-num ${m.rank<=3?'top3':''}">${String(m.rank).padStart(2,'0')}</span></td>
       <td><span class="movie-title-cell">${m.title}</span></td>
-      <td><span class="revenue-cell">${m.weekend}</span></td>
-      <td><span class="revenue-cell" style="font-size:15px;">${m.total}</span></td>
       <td style="color:var(--smoke);">${m.weeks}</td>
-      <td class="bar-cell">
-        <div style="font-size:10px; color:var(--smoke); margin-bottom:4px;">${m.pct}% of #1</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${m.pct}%"></div></div>
-      </td>
-      <td><span class="change-badge ${m.change==='—'?'change-same':m.change.startsWith('↑')?'change-up':'change-down'}">${m.change}</span></td>
+      <td>${weekBadge(m.weeks)}</td>
     </tr>
   `).join('');
 }
@@ -1752,13 +1761,13 @@ function buildAlltimeTable() {
       <td><span class="movie-title-cell">${m.title}</span></td>
       <td style="color:var(--smoke);">${m.year}</td>
       <td><span class="revenue-cell up">${m.gross}</span></td>
-      <td style="font-size:11px; color:var(--smoke); font-style:italic;">${m.notes}</td>
-      <td></td>
+      <td style="font-size:11px; color:var(--smoke); line-height:1.6;">${m.prod}</td>
     </tr>
   `).join('');
 }
 
 buildPhTable(); buildIntlTable(); buildAlltimeTable();
+
 
 function switchTab(el, id) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
