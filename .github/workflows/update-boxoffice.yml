@@ -1,1 +1,41 @@
- 
+name: Update Box Office Data
+
+# Runs every Monday at 2PM UTC (10PM Manila time)
+# By then, US weekend estimates are finalised and PH data is available
+on:
+  schedule:
+    - cron: '0 14 * * 1'
+  workflow_dispatch: # Also allows manual trigger from GitHub Actions tab
+
+jobs:
+  update-box-office:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 lxml
+
+      - name: Run box office updater
+        run: python scripts/update_boxoffice.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config --global user.name 'Mayon Pictures Bot'
+          git config --global user.email 'actions@mayonpictures.com'
+          git add index.html
+          if git diff --staged --quiet; then
+            echo "No changes to commit — data is already up to date."
+          else
+            git commit -m "chore: update box office data $(date +'%Y-%m-%d')"
+            git push
+          fi
