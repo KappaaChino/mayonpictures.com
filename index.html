@@ -2640,23 +2640,58 @@ function updateCount() {
   document.getElementById('charCount').style.color = words > 250 ? 'var(--lava)' : 'var(--smoke)';
 }
 
-function submitPitch() {
-  const name = document.getElementById('f-name').value;
-  const email = document.getElementById('f-email').value;
-  const title = document.getElementById('f-title').value;
-  const logline = document.getElementById('f-logline').value;
+async function submitPitch() {
+  const name     = document.getElementById('f-name').value.trim();
+  const email    = document.getElementById('f-email').value.trim();
+  const title    = document.getElementById('f-title').value.trim();
+  const format   = document.getElementById('f-format').value;
+  const logline  = document.getElementById('f-logline').value.trim();
+  const synopsis = document.getElementById('f-synopsis').value.trim();
+  const genres   = [...document.querySelectorAll('.genre-pill.selected')].map(p => p.textContent).join(', ');
 
   if (!name || !email || !title || !logline) {
     showToast('Incomplete Submission', 'Please fill in all required fields.', true);
     return;
   }
 
-  showToast('Pitch Submitted!', 'Your story has erupted. We\'ll respond within 30 days.');
-  ['f-name','f-email','f-title','f-logline','f-synopsis','f-format'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('selected'));
-  updateCount();
+  // Disable button while sending
+  const btn = document.querySelector('[onclick="submitPitch()"]');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://formspree.io/f/xeenwlrp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        project_title:  title,
+        format:         format || 'Not specified',
+        genres:         genres || 'Not specified',
+        logline,
+        synopsis:       synopsis || 'Not provided',
+        _subject:       `New Pitch: ${title} — by ${name}`
+      })
+    });
+
+    if (res.ok) {
+      showToast('Pitch Submitted!', 'Your story has erupted. We\'ll respond within 30 days.');
+      ['f-name','f-email','f-title','f-logline','f-synopsis','f-format'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('selected'));
+      updateCount();
+    } else {
+      const data = await res.json();
+      showToast('Submission Failed', data.error || 'Something went wrong. Please try again.', true);
+    }
+  } catch (err) {
+    showToast('Submission Failed', 'Network error. Please check your connection and try again.', true);
+  } finally {
+    btn.textContent = 'Ignite Submission →';
+    btn.disabled = false;
+  }
 }
 
 function showToast(title, msg, isError = false) {
