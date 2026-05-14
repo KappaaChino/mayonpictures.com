@@ -426,11 +426,11 @@
   }
   .card-rating {
     display: flex;
-    gap: 3px;
+    align-items: center;
+    gap: 4px;
     margin-bottom: 8px;
   }
-  .star { color: var(--gold); font-size: 12px; }
-  .star.empty { color: var(--smoke); }
+  /* volcano rating system replaces star ratings */
 
   /* Divider */
   .volcanic-divider {
@@ -1256,22 +1256,31 @@
   }
   .review-poster-overlay {
     position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(to top, rgba(12,11,10,0.97) 0%, rgba(12,11,10,0.6) 60%, transparent 100%);
-    padding: 24px 20px 20px;
+    bottom: 16px;
+    left: 16px;
+    background: #ffffff;
+    padding: 10px 14px 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
   }
   .review-stars-big {
     display: flex;
-    gap: 5px;
-    margin-bottom: 6px;
+    align-items: center;
+    gap: 4px;
   }
-  .star-filled { color: var(--gold); font-size: 22px; }
-  .star-empty  { color: rgba(200,189,182,0.25); font-size: 22px; }
+  .vol-icon { display:inline-block; vertical-align:middle; }
+  .review-stars-big .vol-icon { width:26px; height:26px; }
+  .verdict-stars .vol-icon    { width:22px; height:22px; }
+  .card-rating .vol-icon      { width:18px; height:18px; }
   .review-score-label-new {
-    font-size: 10px;
-    letter-spacing: 3px;
+    font-size: 9px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--smoke);
+    color: #5a4a3a;
   }
   .review-meta-block {
     margin-top: 20px;
@@ -1344,7 +1353,7 @@
     margin-top: 10px;
   }
   .review-verdict-block {
-    background: var(--obsidian);
+    background: #f5efe6;
     border-left: 3px solid var(--lava);
     padding: 28px 32px;
     margin-top: 8px;
@@ -1360,7 +1369,7 @@
     font-family: 'Playfair Display', serif;
     font-size: 20px;
     font-style: italic;
-    color: var(--snow);
+    color: #1a1410;
     line-height: 1.6;
     margin-bottom: 16px;
   }
@@ -1368,11 +1377,12 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    flex-wrap: wrap;
   }
   .verdict-score {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 18px;
-    color: var(--smoke);
+    color: #5a4a3a;
     letter-spacing: 2px;
     margin-left: 10px;
   }
@@ -1521,8 +1531,89 @@
       <div class="latest-card featured" onclick="navigate('reviews')" style="cursor:pointer;">
         <div class="card-tag">Featured Review</div>
         <div class="card-rating">
-          <span class="star">★</span><span class="star">★</span><span class="star">★</span>
-          <span class="star">★</span><span class="star empty">★</span>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vchp0" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbhp0" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbhp0)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vchp0)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vchp1" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbhp1" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbhp1)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vchp1)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vchp2" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbhp2" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbhp2)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vchp2)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vchp3" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbhp3" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbhp3)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vchp3)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="rgba(107,101,96,0.18)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="10.5" cy="3" r="1" fill="rgba(107,101,96,0.15)"/>
+              <circle cx="13.5" cy="2" r=".7" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="12" cy="1" r=".5" fill="rgba(107,101,96,0.1)"/>
+            </svg>
         </div>
         <div class="card-title">The Devil Wears Prada 2: Some Things Get Better With Age</div>
         <div class="card-body">Twenty years later, the room felt exactly the same: packed, loud, full of laughter and the kind of collective awe that reminds you why watching films with strangers is still one of life's great pleasures. Miranda, Andy, Emily, and Nigel return not frozen in nostalgia, but genuinely changed. Each carries a lesson worth sitting with. It would be a disservice to call this merely a sequel.</div>
@@ -1700,7 +1791,7 @@
     <h2 class="section-title">Movie <em>Reviews</em></h2>
     <p style="color:var(--smoke); font-size:13px; max-width:600px; line-height:1.8; margin-top:16px;">
       Honest, informed criticism of Philippine and international cinema.
-      Scored on a 5-star scale. No sponsors. No pull quotes.
+      Scored on a 5-volcano scale. No sponsors. No pull quotes.
     </p>
   </div>
 
@@ -1727,13 +1818,91 @@
           </div>
           <div class="review-poster-overlay">
             <div class="review-stars-big">
-              <span class="star-filled">★</span>
-              <span class="star-filled">★</span>
-              <span class="star-filled">★</span>
-              <span class="star-filled">★</span>
-              <span class="star-empty">★</span>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctd0" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtd0" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtd0)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctd0)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctd1" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtd1" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtd1)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctd1)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctd2" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtd2" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtd2)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctd2)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctd3" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtd3" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtd3)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctd3)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="rgba(107,101,96,0.18)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="10.5" cy="3" r="1" fill="rgba(107,101,96,0.15)"/>
+              <circle cx="13.5" cy="2" r=".7" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="12" cy="1" r=".5" fill="rgba(107,101,96,0.1)"/>
+            </svg>
             </div>
-            <div class="review-score-label-new">4 / 5 stars</div>
+            <div class="review-score-label-new">4 / 5 volcanoes</div>
           </div>
         </div>
         <div class="review-meta-block">
@@ -1778,12 +1947,90 @@
           <div class="verdict-label">The Verdict</div>
           <div class="verdict-text">"More than a sequel: it is a reunion that earns every laugh, every tear, and every round of applause."</div>
           <div class="verdict-stars">
-            <span class="star-filled">★</span>
-            <span class="star-filled">★</span>
-            <span class="star-filled">★</span>
-            <span class="star-filled">★</span>
-            <span class="star-empty">★</span>
-            <span class="verdict-score">4/5</span>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv0" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv0" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv0)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv0)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv1" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv1" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv1)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv1)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv2" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv2" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv2)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv2)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv3" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv3" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv3)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv3)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="rgba(107,101,96,0.18)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="10.5" cy="3" r="1" fill="rgba(107,101,96,0.15)"/>
+              <circle cx="13.5" cy="2" r=".7" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="12" cy="1" r=".5" fill="rgba(107,101,96,0.1)"/>
+            </svg>
+            <span class="verdict-score">4 / 5 volcanoes</span>
           </div>
         </div>
 
@@ -1809,13 +2056,91 @@
           >
           <div class="review-poster-overlay">
             <div class="review-stars-big">
-              <span class="star-filled">★</span>
-              <span class="star-filled">★</span>
-              <span class="star-filled">★</span>
-              <span class="star-filled">★</span>
-              <span class="star-empty">★</span>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vcmg0" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbmg0" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbmg0)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vcmg0)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vcmg1" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbmg1" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbmg1)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vcmg1)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vcmg2" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbmg2" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbmg2)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vcmg2)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vcmg3" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbmg3" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbmg3)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vcmg3)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="rgba(107,101,96,0.18)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="10.5" cy="3" r="1" fill="rgba(107,101,96,0.15)"/>
+              <circle cx="13.5" cy="2" r=".7" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="12" cy="1" r=".5" fill="rgba(107,101,96,0.1)"/>
+            </svg>
             </div>
-            <div class="review-score-label-new">4 / 5 stars</div>
+            <div class="review-score-label-new">4 / 5 volcanoes</div>
           </div>
         </div>
         <div class="review-meta-block">
@@ -1862,12 +2187,90 @@
           <div class="verdict-label">The Verdict</div>
           <div class="verdict-text">"A devastating, deeply human film held together by one of the finest ensemble casts Philippine cinema has ever assembled. Maricel Soriano is simply unmatchable."</div>
           <div class="verdict-stars">
-            <span class="star-filled">★</span>
-            <span class="star-filled">★</span>
-            <span class="star-filled">★</span>
-            <span class="star-filled">★</span>
-            <span class="star-empty">★</span>
-            <span class="verdict-score">4/5</span>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv0" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv0" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv0)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv0)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv1" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv1" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv1)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv1)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv2" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv2" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv2)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv2)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-on" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="vctv3" cx="50%" cy="55%" r="50%">
+                  <stop offset="0%" stop-color="#f97316"/>
+                  <stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/>
+                  <stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="vbtv3" x1=".5" y1="0" x2=".5" y2="1">
+                  <stop offset="0%" stop-color="#3a2f28"/>
+                  <stop offset="100%" stop-color="#151210"/>
+                </linearGradient>
+              </defs>
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="url(#vbtv3)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="url(#vctv3)"/>
+              <path d="M9 12 L11 7.5 L12 4 L13 7.5 L15 12" fill="none" stroke="#e84c1e" stroke-width=".7" stroke-opacity=".55" stroke-linejoin="round"/>
+              <circle cx="10.5" cy="3" r="1" fill="#f97316" opacity=".9"/>
+              <circle cx="13.5" cy="2" r=".7" fill="#e84c1e" opacity=".8"/>
+              <circle cx="12" cy="1" r=".5" fill="#f97316" opacity=".65"/>
+            </svg>
+              <svg class="vol-icon vol-off" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 23 L9 12 L11 7.5 L12 4 L13 7.5 L15 12 L23 23Z" fill="rgba(107,101,96,0.18)"/>
+              <ellipse cx="12" cy="6" rx="4.5" ry="2.8" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="10.5" cy="3" r="1" fill="rgba(107,101,96,0.15)"/>
+              <circle cx="13.5" cy="2" r=".7" fill="rgba(107,101,96,0.12)"/>
+              <circle cx="12" cy="1" r=".5" fill="rgba(107,101,96,0.1)"/>
+            </svg>
+            <span class="verdict-score">4 / 5 volcanoes</span>
           </div>
         </div>
 
