@@ -3166,17 +3166,38 @@ function showToast(title, msg, isError = false) {
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ===== SUPABASE VOTE SYSTEM =====
+// Loaded only after Supabase CDN is ready — safe fallback if CDN unavailable
 const SUPABASE_URL = 'https://fqscjshakjqcvdbmfpnf.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_s4zzwgujvTZ6cZvxbrRZxQ_D8Sb5nSJ';
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 const REVIEWS = ['tdwp2', 'mgb'];
+let _supabase = null;
 
-// Load vote counts for all reviews on page load
+// Load Supabase CDN dynamically so it never blocks the rest of the site
+function loadSupabase() {
+  return new Promise((resolve) => {
+    if (typeof supabase !== 'undefined') {
+      _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      return resolve(true);
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = () => {
+      try {
+        _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        resolve(true);
+      } catch(e) { resolve(false); }
+    };
+    script.onerror = () => resolve(false);
+    document.head.appendChild(script);
+  });
+}
+
 async function loadVoteCounts() {
+  const ready = await loadSupabase();
+  if (!ready || !_supabase) return;
+
   for (const reviewId of REVIEWS) {
     try {
       const { data, error } = await _supabase
@@ -3189,32 +3210,47 @@ async function loadVoteCounts() {
       const likes    = data.filter(v => v.vote_type === 'like').length;
       const dislikes = data.filter(v => v.vote_type === 'dislike').length;
 
-      document.getElementById(`like-count-${reviewId}`).textContent    = likes;
-      document.getElementById(`dislike-count-${reviewId}`).textContent = dislikes;
+      const likeEl    = document.getElementById(`like-count-${reviewId}`);
+      const dislikeEl = document.getElementById(`dislike-count-${reviewId}`);
+      if (likeEl)    likeEl.textContent    = likes;
+      if (dislikeEl) dislikeEl.textContent = dislikes;
 
     } catch (err) {
-      console.error(`Vote load error (${reviewId}):`, err);
+      console.warn(`Vote load error (${reviewId}):`, err.message);
     }
 
     // Restore voted state from localStorage
-    const voted = localStorage.getItem(`voted-${reviewId}`);
-    if (voted) {
-      document.getElementById(`like-${reviewId}`).disabled    = true;
-      document.getElementById(`dislike-${reviewId}`).disabled = true;
-      document.getElementById(`${voted}-${reviewId}`).classList.add(`voted-${voted}`);
-    }
+    try {
+      const voted = localStorage.getItem(`voted-${reviewId}`);
+      if (voted) {
+        const lb = document.getElementById(`like-${reviewId}`);
+        const db = document.getElementById(`dislike-${reviewId}`);
+        const vb = document.getElementById(`${voted}-${reviewId}`);
+        if (lb) lb.disabled = true;
+        if (db) db.disabled = true;
+        if (vb) vb.classList.add(`voted-${voted}`);
+      }
+    } catch(e) {}
   }
 }
 
 async function castVote(reviewId, voteType) {
-  // Prevent double voting
-  if (localStorage.getItem(`voted-${reviewId}`)) return;
+  try {
+    if (localStorage.getItem(`voted-${reviewId}`)) return;
+  } catch(e) {}
 
   const likeBtn    = document.getElementById(`like-${reviewId}`);
   const dislikeBtn = document.getElementById(`dislike-${reviewId}`);
+  if (likeBtn)    likeBtn.disabled    = true;
+  if (dislikeBtn) dislikeBtn.disabled = true;
 
-  likeBtn.disabled    = true;
-  dislikeBtn.disabled = true;
+  const ready = await loadSupabase();
+  if (!ready || !_supabase) {
+    showToast('Not available', 'Voting unavailable in preview mode.', true);
+    if (likeBtn)    likeBtn.disabled    = false;
+    if (dislikeBtn) dislikeBtn.disabled = false;
+    return;
+  }
 
   try {
     const { error } = await _supabase
@@ -3223,36 +3259,32 @@ async function castVote(reviewId, voteType) {
 
     if (error) throw error;
 
-    // Update count in UI
     const countEl = document.getElementById(`${voteType}-count-${reviewId}`);
-    countEl.textContent = parseInt(countEl.textContent || 0) + 1;
+    if (countEl) countEl.textContent = (parseInt(countEl.textContent) || 0) + 1;
 
-    // Style the voted button
-    document.getElementById(`${voteType}-${reviewId}`).classList.add(`voted-${voteType}`);
+    const votedBtn = document.getElementById(`${voteType}-${reviewId}`);
+    if (votedBtn) votedBtn.classList.add(`voted-${voteType}`);
 
-    // Remember vote in localStorage so they can't vote again
-    localStorage.setItem(`voted-${reviewId}`, voteType);
-
+    try { localStorage.setItem(`voted-${reviewId}`, voteType); } catch(e) {}
     showToast('Thanks for your feedback!', 'Your vote has been recorded.');
 
   } catch (err) {
-    console.error('Vote error:', err);
-    likeBtn.disabled    = false;
-    dislikeBtn.disabled = false;
+    console.warn('Vote error:', err.message);
+    if (likeBtn)    likeBtn.disabled    = false;
+    if (dislikeBtn) dislikeBtn.disabled = false;
     showToast('Vote failed', 'Please try again.', true);
   }
 }
 
-// Load counts when reviews page is opened
-const _origNavigate = navigate;
-function navigate(page) {
-  _origNavigate(page);
-  if (page === 'reviews') loadVoteCounts();
-}
-
-// Also load on initial page if reviews is active
-window.addEventListener('load', () => {
-  if (document.getElementById('page-reviews').classList.contains('active')) {
+// Hook into navigate safely
+document.addEventListener('DOMContentLoaded', () => {
+  const _orig = window.navigate;
+  window.navigate = function(page) {
+    _orig(page);
+    if (page === 'reviews') loadVoteCounts();
+  };
+  if (document.getElementById('page-reviews') &&
+      document.getElementById('page-reviews').classList.contains('active')) {
     loadVoteCounts();
   }
 });
