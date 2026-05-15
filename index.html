@@ -1594,6 +1594,57 @@
     .review-poster-wrap { max-width: 320px; }
   }
 
+
+  /* ===================== VOTE BUTTONS ===================== */
+  .review-vote-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(200,189,182,0.1);
+  }
+  .vote-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-right: 4px;
+  }
+  .vote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid rgba(200,189,182,0.2);
+    background: transparent;
+    color: var(--mist);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+  .vote-btn:hover { border-color: var(--lava); color: var(--snow); }
+  .vote-btn.voted-like {
+    background: rgba(74,222,128,0.1);
+    border-color: #4ade80;
+    color: #4ade80;
+  }
+  .vote-btn.voted-dislike {
+    background: rgba(232,76,30,0.1);
+    border-color: var(--lava);
+    color: var(--lava);
+  }
+  .vote-btn:disabled { cursor: default; }
+  .vote-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+  .vote-icon { font-size: 16px; }
+
 </style>
 </head>
 <body>
@@ -2236,6 +2287,18 @@
           </div>
         </div>
 
+        <div class="review-vote-block" id="votes-tdwp2">
+          <span class="vote-label">Was this review helpful?</span>
+          <button class="vote-btn" id="like-tdwp2" onclick="castVote('tdwp2', 'like')">
+            <span class="vote-icon">👍</span>
+            <span class="vote-count" id="like-count-tdwp2">–</span>
+          </button>
+          <button class="vote-btn" id="dislike-tdwp2" onclick="castVote('tdwp2', 'dislike')">
+            <span class="vote-icon">👎</span>
+            <span class="vote-count" id="dislike-count-tdwp2">–</span>
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2474,6 +2537,18 @@
             </svg>
             <span class="verdict-score">4 / 5 volcanoes</span>
           </div>
+        </div>
+
+        <div class="review-vote-block" id="votes-mgb">
+          <span class="vote-label">Was this review helpful?</span>
+          <button class="vote-btn" id="like-mgb" onclick="castVote('mgb', 'like')">
+            <span class="vote-icon">👍</span>
+            <span class="vote-count" id="like-count-mgb">–</span>
+          </button>
+          <button class="vote-btn" id="dislike-mgb" onclick="castVote('mgb', 'dislike')">
+            <span class="vote-icon">👎</span>
+            <span class="vote-count" id="dislike-count-mgb">–</span>
+          </button>
         </div>
 
       </div>
@@ -3089,6 +3164,99 @@ function showToast(title, msg, isError = false) {
     </div>
   </footer>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ===== SUPABASE VOTE SYSTEM =====
+const SUPABASE_URL = 'https://fqscjshakjqcvdbmfpnf.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_s4zzwgujvTZ6cZvxbrRZxQ_D8Sb5nSJ';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const REVIEWS = ['tdwp2', 'mgb'];
+
+// Load vote counts for all reviews on page load
+async function loadVoteCounts() {
+  for (const reviewId of REVIEWS) {
+    try {
+      const { data, error } = await _supabase
+        .from('review_votes')
+        .select('vote_type')
+        .eq('review_id', reviewId);
+
+      if (error) throw error;
+
+      const likes    = data.filter(v => v.vote_type === 'like').length;
+      const dislikes = data.filter(v => v.vote_type === 'dislike').length;
+
+      document.getElementById(`like-count-${reviewId}`).textContent    = likes;
+      document.getElementById(`dislike-count-${reviewId}`).textContent = dislikes;
+
+    } catch (err) {
+      console.error(`Vote load error (${reviewId}):`, err);
+    }
+
+    // Restore voted state from localStorage
+    const voted = localStorage.getItem(`voted-${reviewId}`);
+    if (voted) {
+      document.getElementById(`like-${reviewId}`).disabled    = true;
+      document.getElementById(`dislike-${reviewId}`).disabled = true;
+      document.getElementById(`${voted}-${reviewId}`).classList.add(`voted-${voted}`);
+    }
+  }
+}
+
+async function castVote(reviewId, voteType) {
+  // Prevent double voting
+  if (localStorage.getItem(`voted-${reviewId}`)) return;
+
+  const likeBtn    = document.getElementById(`like-${reviewId}`);
+  const dislikeBtn = document.getElementById(`dislike-${reviewId}`);
+
+  likeBtn.disabled    = true;
+  dislikeBtn.disabled = true;
+
+  try {
+    const { error } = await _supabase
+      .from('review_votes')
+      .insert([{ review_id: reviewId, vote_type: voteType }]);
+
+    if (error) throw error;
+
+    // Update count in UI
+    const countEl = document.getElementById(`${voteType}-count-${reviewId}`);
+    countEl.textContent = parseInt(countEl.textContent || 0) + 1;
+
+    // Style the voted button
+    document.getElementById(`${voteType}-${reviewId}`).classList.add(`voted-${voteType}`);
+
+    // Remember vote in localStorage so they can't vote again
+    localStorage.setItem(`voted-${reviewId}`, voteType);
+
+    showToast('Thanks for your feedback!', 'Your vote has been recorded.');
+
+  } catch (err) {
+    console.error('Vote error:', err);
+    likeBtn.disabled    = false;
+    dislikeBtn.disabled = false;
+    showToast('Vote failed', 'Please try again.', true);
+  }
+}
+
+// Load counts when reviews page is opened
+const _origNavigate = navigate;
+function navigate(page) {
+  _origNavigate(page);
+  if (page === 'reviews') loadVoteCounts();
+}
+
+// Also load on initial page if reviews is active
+window.addEventListener('load', () => {
+  if (document.getElementById('page-reviews').classList.contains('active')) {
+    loadVoteCounts();
+  }
+});
+</script>
 
 </body>
 </html>
