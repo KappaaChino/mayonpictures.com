@@ -1,11 +1,9 @@
 name: Update Box Office Data
 
-# Runs every Monday at 2PM UTC (10PM Manila time)
-# By then, US weekend estimates are finalised and PH data is available
 on:
   schedule:
     - cron: '0 14 * * 1'
-  workflow_dispatch: # Also allows manual trigger from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   update-box-office:
