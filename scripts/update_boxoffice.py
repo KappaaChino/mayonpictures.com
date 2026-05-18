@@ -70,117 +70,181 @@ def esc(s: str) -> str:
 # ---------------------------------------------------------------------------
 # Source 1 — PH Weekly (Box Office Mojo)
 # ---------------------------------------------------------------------------
+def get_current_ph_week():
+    """
+    Read the BOM week number already stored in index.html.
+    Returns (year, week) so we never overwrite with older data.
+    """
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            content = f.read()
+        m = re.search(r"Weekend (\d+),\s*(\d{4})", content)
+        if m:
+            return int(m.group(2)), int(m.group(1))
+    except Exception:
+        pass
+    return 0, 0
+
+
+def scrape_bom_ph_page(url, bom_week, cf_requests):
+    """
+    Fetch a single BOM PH weekend page and return parsed movies list.
+    Returns (movies, date_range) or ([], '') on failure.
+    """
+    r = cf_requests.get(
+        url,
+        impersonate="chrome124",
+        headers={"Accept-Language": "en-US,en;q=0.9"},
+        timeout=20,
+    )
+    r.raise_for_status()
+    soup = BeautifulSoup(r.text, "html.parser")
+
+    # Confirm it's a Philippine page
+    h1 = soup.find("h1")
+    page_label = h1.get_text(strip=True) if h1 else ""
+    if "Philippine" not in page_label:
+        print(f"  ! W{bom_week:02d}: not a PH page ({page_label[:40]})")
+        return [], ""
+
+    # Date range from <h4> e.g. "May 6-10, 2026"
+    h4 = soup.find("h4")
+    date_range = h4.get_text(strip=True) if h4 else ""
+
+    table = soup.find("table")
+    if not table:
+        print(f"  ! W{bom_week:02d}: no table found")
+        return [], ""
+
+    # Detect "Weeks" column from header row
+    header_row = table.find("tr")
+    header_cells = [th.get_text(strip=True)
+                    for th in header_row.find_all(["th", "td"])] if header_row else []
+    weeks_col = next(
+        (i for i, h in enumerate(header_cells)
+         if h.lower() in ("weeks", "wks", "week")), None
+    )
+
+    movies = []
+    for row in table.find_all("tr")[1:]:
+        cols = row.find_all("td")
+        if len(cols) < 3:
+            continue
+        try:
+            rank = int(cols[0].get_text(strip=True))
+        except ValueError:
+            continue
+
+        title_el = cols[2].find("a")
+        title = (title_el or cols[2]).get_text(strip=True)
+        if not title:
+            continue
+
+        # BOM PH columns: Rank(0) LW(1) Title(2) Gross(3) %(4)
+        #                 Theaters(5) Change(6) Avg(7) Total(8) Weeks(9) Dist(10)
+        weeks = 1
+        for idx in ([weeks_col] if weeks_col is not None else []) + [9, -2, -3]:
+            try:
+                val = cols[idx].get_text(strip=True)
+                weeks = int(val)
+                break
+            except (ValueError, TypeError, IndexError):
+                continue
+
+        movies.append({"rank": rank, "title": title, "weeks": weeks})
+
+    return movies, date_range
+
+
 def fetch_ph_weekly():
     """
     Returns: (movies, label, date_range, url)
       movies = [{'rank': int, 'title': str, 'weeks': int}, ...]
 
-    Box Office Mojo uses Cloudflare bot protection which blocks standard
-    requests and headless browsers running on cloud IPs (like GitHub Actions).
-    curl_cffi impersonates a real browser TLS fingerprint to bypass this.
-
-    BOM weekend numbers differ from ISO week numbers by ~1, so we try a
-    range of week numbers (iso_week-1 through iso_week-6) as fallback.
+    Strategy 1 — scrape BOM's PH listing page to get the latest weekend URL
+                 directly, no week-number guessing needed.
+    Strategy 2 — fallback: try week numbers iso_week-1 through iso_week-6,
+                 but NEVER accept a week older than what's already in index.html.
     """
     from curl_cffi import requests as cf_requests
+
+    # Read current week stored in HTML — never go backwards
+    current_year, current_week = get_current_ph_week()
+    print(f"  Current PH week in HTML: Weekend {current_week}, {current_year}")
 
     today = date.today()
     iso_year, iso_week, _ = today.isocalendar()
 
-    # Build candidate BOM week numbers (BOM is typically ISO week - 1)
+    # ── Strategy 1: get the latest URL from BOM's PH listing page ──
+    listing_url = "https://www.boxofficemojo.com/weekend/?area=PH"
+    try:
+        r = cf_requests.get(
+            listing_url,
+            impersonate="chrome124",
+            headers={"Accept-Language": "en-US,en;q=0.9"},
+            timeout=20,
+        )
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "html.parser")
+
+        # Find all links to PH weekend pages — first one is the latest
+        links = [
+            a["href"] for a in soup.find_all("a", href=True)
+            if re.search(r"/weekend/\d{4}W\d+/", a["href"])
+            and "area=PH" in a["href"]
+        ]
+
+        if links:
+            latest_href = links[0]
+            m = re.search(r"/(\d{4})W(\d+)/", latest_href)
+            if m:
+                bom_year, bom_week = int(m.group(1)), int(m.group(2))
+                url = f"https://www.boxofficemojo.com{latest_href}"
+                if not url.startswith("https://www.boxofficemojo.com/weekend/"):
+                    url = f"https://www.boxofficemojo.com/weekend/{bom_year}W{bom_week:02d}/?area=PH"
+
+                print(f"  Listing page found latest: Weekend {bom_week}, {bom_year}")
+
+                # Never go backwards
+                if (bom_year, bom_week) < (current_year, current_week):
+                    print(f"  ! Listing week W{bom_week:02d} is older than current W{current_week:02d} — skipping")
+                else:
+                    movies, date_range = scrape_bom_ph_page(url, bom_week, cf_requests)
+                    if movies:
+                        label = f"Weekend {bom_week}, {bom_year}"
+                        print(f"  ✓ PH Weekly (via listing): {len(movies)} films — {label} ({date_range})")
+                        return movies, label, date_range, url
+
+    except Exception as exc:
+        print(f"  ! Listing page strategy failed: {exc}")
+
+    # ── Strategy 2: try week numbers, never older than current ──
+    print("  Falling back to week-number strategy...")
     bom_candidates = []
-    for delta in range(1, 7):
+    for delta in range(1, 8):
         w = iso_week - delta
         y = iso_year
         if w < 1:
             w += 52
             y -= 1
+        # Skip if older than what's already in the HTML
+        if (y, w) < (current_year, current_week):
+            print(f"  ! Skipping W{w:02d} — older than current W{current_week:02d}")
+            continue
         bom_candidates.append((y, w))
 
     for bom_year, bom_week in bom_candidates:
-        url = (
-            f"https://www.boxofficemojo.com/weekend/"
-            f"{bom_year}W{bom_week:02d}/?area=PH"
-        )
+        url = f"https://www.boxofficemojo.com/weekend/{bom_year}W{bom_week:02d}/?area=PH"
         try:
-            r = cf_requests.get(
-                url,
-                impersonate="chrome124",
-                headers={"Accept-Language": "en-US,en;q=0.9"},
-                timeout=20,
-            )
-            r.raise_for_status()
-            soup = BeautifulSoup(r.text, "html.parser")
-
-            # Confirm it's a Philippine page
-            h1 = soup.find("h1")
-            page_label = h1.get_text(strip=True) if h1 else ""
-            if "Philippine" not in page_label:
-                print(f"  ! BOM W{bom_week:02d}: not a PH page — skipping")
-                continue
-
-            # Date range from <h4> e.g. "May 6-10, 2026"
-            h4 = soup.find("h4")
-            date_range = h4.get_text(strip=True) if h4 else ""
-
-            # Find the header row to locate the "Weeks" column index
-            table = soup.find("table")
-            if not table:
-                print(f"  ! BOM W{bom_week:02d}: no table found")
-                continue
-
-            # Detect "Weeks" column from header row
-            header_row = table.find("tr")
-            header_cells = [th.get_text(strip=True)
-                            for th in header_row.find_all(["th", "td"])] if header_row else []
-            weeks_col = next(
-                (i for i, h in enumerate(header_cells)
-                 if h.lower() in ("weeks", "wks", "week")), None
-            )
-
-            movies = []
-            for row in table.find_all("tr")[1:]:
-                cols = row.find_all("td")
-                if len(cols) < 3:
-                    continue
-
-                # Rank
-                try:
-                    rank = int(cols[0].get_text(strip=True))
-                except ValueError:
-                    continue
-
-                # Title — 3rd column, inside <a>
-                title_el = cols[2].find("a")
-                title = (title_el or cols[2]).get_text(strip=True)
-                if not title:
-                    continue
-
-                # Weeks — try detected column first, then known BOM column order
-                # BOM PH: Rank(0) LW(1) Title(2) Gross(3) %(4) Theaters(5)
-                #         Change(6) Avg(7) Total(8) Weeks(9) Distributor(10)
-                weeks = 1
-                for idx in ([weeks_col] if weeks_col is not None else []) + [9, -2, -3]:
-                    try:
-                        val = cols[idx].get_text(strip=True)
-                        weeks = int(val)
-                        break
-                    except (ValueError, TypeError, IndexError):
-                        continue
-
-                movies.append({"rank": rank, "title": title, "weeks": weeks})
-
+            movies, date_range = scrape_bom_ph_page(url, bom_week, cf_requests)
             if movies:
                 label = f"Weekend {bom_week}, {bom_year}"
-                print(f"  ✓ PH Weekly: {len(movies)} films — {label} ({date_range})")
+                print(f"  ✓ PH Weekly (via fallback): {len(movies)} films — {label} ({date_range})")
                 return movies, label, date_range, url
-
-            print(f"  ! BOM W{bom_week:02d}: table found but no ranked rows")
-
         except Exception as exc:
             print(f"  ! BOM W{bom_week:02d} failed: {exc}")
 
-    print("  ✗ PH Weekly: all attempts failed — returning empty list.")
+    print("  ✗ PH Weekly: all strategies failed — keeping existing data.")
     return [], "Unknown", "", "https://www.boxofficemojo.com"
 
 
@@ -425,6 +489,11 @@ if __name__ == "__main__":
     print("\n[3/3] PH All Time Box Office (Wikipedia)…")
     at_movies, at_url = fetch_ph_alltime()
 
+    # If PH fetch returned nothing, preserve whatever is already in index.html
+    # by reading the existing phMovies block and keeping it untouched.
+    if not ph_movies:
+        print("\n  ⚠ PH Weekly fetch returned no data — existing PH data will be preserved.")
+
     # Abort only if ALL three sources failed
     if not ph_movies and not us_movies and not at_movies:
         print("\n✗ All three sources returned no data. Aborting — index.html unchanged.")
@@ -436,6 +505,15 @@ if __name__ == "__main__":
         us_movies, us_label, us_url,
         at_movies, at_url,
     )
+
+    # If PH is empty, strip the phMovies block from js_block so it's not overwritten
+    if not ph_movies:
+        js_block = re.sub(
+            r"// PH WEEKLY.*?const phMovies = \[.*?\];",
+            "",
+            js_block,
+            flags=re.DOTALL,
+        )
 
     print("Patching index.html…")
     ok = update_index_html(js_block, ph_label, ph_dates, ph_url, us_label)
