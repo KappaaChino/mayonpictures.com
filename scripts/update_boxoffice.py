@@ -75,14 +75,14 @@ def fetch_ph_weekly():
     Returns: (movies, label, date_range, url)
       movies = [{'rank': int, 'title': str, 'weeks': int}, ...]
 
-    Box Office Mojo renders its tables via JavaScript so plain requests()
-    returns an empty table. We use Playwright (headless Chromium) to fully
-    render the page before parsing.
+    Box Office Mojo uses Cloudflare bot protection which blocks standard
+    requests and headless browsers running on cloud IPs (like GitHub Actions).
+    curl_cffi impersonates a real browser TLS fingerprint to bypass this.
 
     BOM weekend numbers differ from ISO week numbers by ~1, so we try a
     range of week numbers (iso_week-1 through iso_week-6) as fallback.
     """
-    from playwright.sync_api import sync_playwright
+    from curl_cffi import requests as cf_requests
 
     today = date.today()
     iso_year, iso_week, _ = today.isocalendar()
@@ -103,15 +103,14 @@ def fetch_ph_weekly():
             f"{bom_year}W{bom_week:02d}/?area=PH"
         )
         try:
-            with sync_playwright() as p:
-                browser = p.chromium.launch(headless=True)
-                page = browser.new_page()
-                page.set_extra_http_headers({"Accept-Language": "en-US,en;q=0.9"})
-                page.goto(url, wait_until="networkidle", timeout=30000)
-                html = page.content()
-                browser.close()
-
-            soup = BeautifulSoup(html, "html.parser")
+            r = cf_requests.get(
+                url,
+                impersonate="chrome124",
+                headers={"Accept-Language": "en-US,en;q=0.9"},
+                timeout=20,
+            )
+            r.raise_for_status()
+            soup = BeautifulSoup(r.text, "html.parser")
 
             # Confirm it's a Philippine page
             h1 = soup.find("h1")
@@ -130,18 +129,14 @@ def fetch_ph_weekly():
                 print(f"  ! BOM W{bom_week:02d}: no table found")
                 continue
 
-            # Detect column index for "Weeks" from the header row
+            # Detect "Weeks" column from header row
             header_row = table.find("tr")
-            if header_row:
-                header_cells = [th.get_text(strip=True) for th in header_row.find_all(["th", "td"])]
-            else:
-                header_cells = []
-
-            weeks_col = None
-            for i, h in enumerate(header_cells):
-                if h.lower() in ("weeks", "wks", "week"):
-                    weeks_col = i
-                    break
+            header_cells = [th.get_text(strip=True)
+                            for th in header_row.find_all(["th", "td"])] if header_row else []
+            weeks_col = next(
+                (i for i, h in enumerate(header_cells)
+                 if h.lower() in ("weeks", "wks", "week")), None
+            )
 
             movies = []
             for row in table.find_all("tr")[1:]:
@@ -161,25 +156,16 @@ def fetch_ph_weekly():
                 if not title:
                     continue
 
-                # Weeks in release — use detected column or try known fallbacks
+                # Weeks — try detected column first, then known BOM column order
+                # BOM PH: Rank(0) LW(1) Title(2) Gross(3) %(4) Theaters(5)
+                #         Change(6) Avg(7) Total(8) Weeks(9) Distributor(10)
                 weeks = 1
-                candidates = []
-                if weeks_col is not None and weeks_col < len(cols):
-                    candidates.append(cols[weeks_col])
-                # Known BOM PH column order: Rank(0) LW(1) Title(2) Gross(3)
-                # %LW(4) Theaters(5) Change(6) Avg(7) Total(8) Weeks(9) Dist(10)
-                for idx in [9, -2, -3]:
+                for idx in ([weeks_col] if weeks_col is not None else []) + [9, -2, -3]:
                     try:
-                        candidates.append(cols[idx])
-                    except IndexError:
-                        pass
-
-                for col in candidates:
-                    val = col.get_text(strip=True)
-                    try:
+                        val = cols[idx].get_text(strip=True)
                         weeks = int(val)
                         break
-                    except (ValueError, TypeError):
+                    except (ValueError, TypeError, IndexError):
                         continue
 
                 movies.append({"rank": rank, "title": title, "weeks": weeks})
@@ -189,7 +175,7 @@ def fetch_ph_weekly():
                 print(f"  ✓ PH Weekly: {len(movies)} films — {label} ({date_range})")
                 return movies, label, date_range, url
 
-            print(f"  ! BOM W{bom_week:02d}: table parsed but no ranked rows")
+            print(f"  ! BOM W{bom_week:02d}: table found but no ranked rows")
 
         except Exception as exc:
             print(f"  ! BOM W{bom_week:02d} failed: {exc}")
