@@ -75,16 +75,19 @@ def fetch_ph_weekly():
     Returns: (movies, label, date_range, url)
       movies = [{'rank': int, 'title': str, 'weeks': int}, ...]
 
-    Box Office Mojo weekend numbers are NOT the same as ISO week numbers.
-    BOM weekend N typically equals ISO week N+1 (i.e. BOM week = ISO week - 1).
-    We try a range of BOM week numbers starting from iso_week-1 going back 5
-    weeks to reliably find the most recent available PH chart.
+    Box Office Mojo renders its tables via JavaScript so plain requests()
+    returns an empty table. We use Playwright (headless Chromium) to fully
+    render the page before parsing.
+
+    BOM weekend numbers differ from ISO week numbers by ~1, so we try a
+    range of week numbers (iso_week-1 through iso_week-6) as fallback.
     """
+    from playwright.sync_api import sync_playwright
+
     today = date.today()
     iso_year, iso_week, _ = today.isocalendar()
 
-    # BOM week numbers to try: start 1 below ISO week (the typical offset),
-    # then go further back as fallback.
+    # Build candidate BOM week numbers (BOM is typically ISO week - 1)
     bom_candidates = []
     for delta in range(1, 7):
         w = iso_week - delta
@@ -100,27 +103,45 @@ def fetch_ph_weekly():
             f"{bom_year}W{bom_week:02d}/?area=PH"
         )
         try:
-            r = requests.get(url, headers=HEADERS, timeout=20)
-            r.raise_for_status()
-            soup = BeautifulSoup(r.text, "html.parser")
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                page = browser.new_page()
+                page.set_extra_http_headers({"Accept-Language": "en-US,en;q=0.9"})
+                page.goto(url, wait_until="networkidle", timeout=30000)
+                html = page.content()
+                browser.close()
 
-            # Extract label from <h1> e.g. "Philippine 2026 Weekend 18"
+            soup = BeautifulSoup(html, "html.parser")
+
+            # Confirm it's a Philippine page
             h1 = soup.find("h1")
-            page_label = h1.get_text(strip=True) if h1 else f"Weekend {bom_week}, {bom_year}"
+            page_label = h1.get_text(strip=True) if h1 else ""
+            if "Philippine" not in page_label:
+                print(f"  ! BOM W{bom_week:02d}: not a PH page — skipping")
+                continue
 
-            # Extract date range from the <h4> below h1 e.g. "May 6-10, 2026"
+            # Date range from <h4> e.g. "May 6-10, 2026"
             h4 = soup.find("h4")
             date_range = h4.get_text(strip=True) if h4 else ""
 
-            # Verify this is actually a PH page (title should contain "Philippine")
-            if "Philippine" not in page_label and "Philippine" not in soup.title.string:
-                print(f"  ! BOM W{bom_week:02d}: not a PH page, skipping")
-                continue
-
+            # Find the header row to locate the "Weeks" column index
             table = soup.find("table")
             if not table:
                 print(f"  ! BOM W{bom_week:02d}: no table found")
                 continue
+
+            # Detect column index for "Weeks" from the header row
+            header_row = table.find("tr")
+            if header_row:
+                header_cells = [th.get_text(strip=True) for th in header_row.find_all(["th", "td"])]
+            else:
+                header_cells = []
+
+            weeks_col = None
+            for i, h in enumerate(header_cells):
+                if h.lower() in ("weeks", "wks", "week"):
+                    weeks_col = i
+                    break
 
             movies = []
             for row in table.find_all("tr")[1:]:
@@ -128,23 +149,38 @@ def fetch_ph_weekly():
                 if len(cols) < 3:
                     continue
 
-                # Rank — first column
+                # Rank
                 try:
                     rank = int(cols[0].get_text(strip=True))
                 except ValueError:
                     continue
 
-                # Title — 3rd column (index 2), inside <a>
+                # Title — 3rd column, inside <a>
                 title_el = cols[2].find("a")
                 title = (title_el or cols[2]).get_text(strip=True)
                 if not title:
                     continue
 
-                # Weeks in release — second-to-last column
-                try:
-                    weeks = int(cols[-2].get_text(strip=True))
-                except (ValueError, IndexError):
-                    weeks = 1
+                # Weeks in release — use detected column or try known fallbacks
+                weeks = 1
+                candidates = []
+                if weeks_col is not None and weeks_col < len(cols):
+                    candidates.append(cols[weeks_col])
+                # Known BOM PH column order: Rank(0) LW(1) Title(2) Gross(3)
+                # %LW(4) Theaters(5) Change(6) Avg(7) Total(8) Weeks(9) Dist(10)
+                for idx in [9, -2, -3]:
+                    try:
+                        candidates.append(cols[idx])
+                    except IndexError:
+                        pass
+
+                for col in candidates:
+                    val = col.get_text(strip=True)
+                    try:
+                        weeks = int(val)
+                        break
+                    except (ValueError, TypeError):
+                        continue
 
                 movies.append({"rank": rank, "title": title, "weeks": weeks})
 
@@ -153,7 +189,7 @@ def fetch_ph_weekly():
                 print(f"  ✓ PH Weekly: {len(movies)} films — {label} ({date_range})")
                 return movies, label, date_range, url
 
-            print(f"  ! BOM W{bom_week:02d}: table found but no ranked rows")
+            print(f"  ! BOM W{bom_week:02d}: table parsed but no ranked rows")
 
         except Exception as exc:
             print(f"  ! BOM W{bom_week:02d} failed: {exc}")
