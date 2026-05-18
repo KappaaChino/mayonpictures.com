@@ -388,15 +388,15 @@ def update_index_html(js_block: str, ph_label: str, ph_dates: str,
 
     # Update PH source link text
     new_content = re.sub(
-        r"(href=\"https://www\.boxofficemojo\.com/weekend/[^\"]*\">)[^<]*(</a>)",
-        rf"\1Box Office Mojo — Philippine {ph_label}, {ph_dates}\2",
+        r"(href=\"https://www\.boxofficemojo\.com/weekend/[^\"]*\"[^>]*>)[^<]*(</a>)",
+        rf"\1Box Office Mojo: Philippine {ph_label}, {ph_dates}\2",
         new_content,
     )
 
     # Update US source link text
     new_content = re.sub(
-        r"(href=\"https://www\.the-numbers\.com/weekend-box-office-chart\">)[^<]*(</a>)",
-        rf"\1The Numbers — US Weekend Domestic Box Office, {us_label}\2",
+        r"(href=\"https://www\.the-numbers\.com/weekend-box-office-chart\"[^>]*>)[^<]*(</a>)",
+        rf"\1The Numbers: US Weekend Domestic Box Office, {us_label}\2",
         new_content,
     )
 
