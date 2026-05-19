@@ -72,13 +72,20 @@ def esc(s: str) -> str:
 # ---------------------------------------------------------------------------
 def get_current_ph_week():
     """
-    Read the BOM week number already stored in index.html.
+    Read the BOM week number stored in the phMovies JS comment in index.html.
+    We search specifically inside the PH WEEKLY comment block to avoid
+    accidentally reading the home page stat box or other Weekend N references.
     Returns (year, week) so we never overwrite with older data.
     """
     try:
         with open("index.html", "r", encoding="utf-8") as f:
             content = f.read()
-        m = re.search(r"Weekend (\d+),\s*(\d{4})", content)
+        # Match the comment line right before const phMovies:
+        # // PH WEEKLY — Source: Box Office Mojo · [anything] Weekend N [anything] YYYY
+        m = re.search(
+            r"// PH WEEKLY[^\n]*Weekend (\d+)[^\d]+(\d{4})",
+            content
+        )
         if m:
             return int(m.group(2)), int(m.group(1))
     except Exception:
@@ -220,17 +227,20 @@ def fetch_ph_weekly():
 
     # ── Strategy 2: try week numbers, never older than current ──
     print("  Falling back to week-number strategy...")
+    # On Monday the last completed weekend = Sunday of ISO week (current-1).
+    # BOM week = ISO week - 1, so most recent BOM week = iso_week - 2.
+    # Start at delta=2, go back, and stop as soon as we hit a week older
+    # than what's already stored — never go backwards.
     bom_candidates = []
-    for delta in range(1, 8):
+    for delta in range(2, 9):
         w = iso_week - delta
         y = iso_year
         if w < 1:
             w += 52
             y -= 1
-        # Skip if older than what's already in the HTML
         if (y, w) < (current_year, current_week):
-            print(f"  ! Skipping W{w:02d} — older than current W{current_week:02d}")
-            continue
+            print(f"  ! Stopping at W{w:02d} — older than current W{current_week:02d}")
+            break
         bom_candidates.append((y, w))
 
     for bom_year, bom_week in bom_candidates:
