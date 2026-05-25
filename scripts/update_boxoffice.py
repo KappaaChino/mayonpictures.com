@@ -265,7 +265,10 @@ def fetch_us_weekly():
     """
     Returns: (movies, label, url)
       movies = [{'rank': int, 'title': str, 'weeks': int}, ...]
-    Only ranked entries (1, 2, 3 … 12) are included; unranked rows are skipped.
+
+    The Numbers changed their table format — the Rank column now shows '-'
+    dashes instead of integers. We assign rank by row order instead.
+    We also skip rows with no valid title or no days-in-release value.
     """
     url = "https://www.the-numbers.com/weekend-box-office-chart"
     try:
@@ -273,10 +276,9 @@ def fetch_us_weekly():
         r.raise_for_status()
         soup = BeautifulSoup(r.text, "html.parser")
 
-        # Weekend date from the <h1>
+        # Weekend date from the <h1> e.g. "Weekend Domestic Box Office May 22, 2026"
         h1 = soup.find("h1")
         label = h1.get_text(strip=True) if h1 else "Unknown"
-        # Strip the long prefix
         label = re.sub(r"^Weekend Domestic Box Office\s*", "", label).strip()
 
         # First <table> is the main chart
@@ -286,31 +288,27 @@ def fetch_us_weekly():
             return [], label, url
 
         movies = []
+        rank = 0
         for row in table.find_all("tr")[1:]:
             cols = row.find_all("td")
             if len(cols) < 3:
                 continue
 
-            # Only keep rows where rank column is a plain integer
-            rank_text = cols[0].get_text(strip=True)
-            try:
-                rank = int(rank_text)
-            except ValueError:
-                continue  # dash / unranked rows
-
-            # Title — 3rd column, inside <strong><a>
+            # Title — 3rd column (index 2), inside <a> or <strong>
             title_el = cols[2].find("a") or cols[2].find("strong") or cols[2]
             title = title_el.get_text(strip=True)
-            if not title:
+            if not title or title.lower().startswith("reporting"):
                 continue
 
-            # Days in release → weeks
+            # Days in release → weeks (last column)
             try:
-                days = int(cols[-1].get_text(strip=True))
+                days_text = cols[-1].get_text(strip=True).replace(",", "")
+                days = int(days_text)
                 weeks = max(1, (days + 6) // 7)
             except (ValueError, IndexError):
-                weeks = 1
+                continue  # skip rows without a valid days value
 
+            rank += 1
             movies.append({"rank": rank, "title": title, "weeks": weeks})
 
         print(f"  ✓ US Weekly: {len(movies)} films — {label}")
