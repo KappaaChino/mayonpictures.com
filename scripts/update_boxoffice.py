@@ -270,7 +270,7 @@ def fetch_us_weekly():
     dashes instead of integers. We assign rank by row order instead.
     We also skip rows with no valid title or no days-in-release value.
     """
-    url = "https://www.the-numbers.com/weekend-box-office-chart"
+    url = "https://www.the-numbers.com/daily-box-office-chart"
     try:
         r = requests.get(url, headers=HEADERS, timeout=20)
         r.raise_for_status()
@@ -279,7 +279,7 @@ def fetch_us_weekly():
         # Weekend date from the <h1> e.g. "Weekend Domestic Box Office May 22, 2026"
         h1 = soup.find("h1")
         label = h1.get_text(strip=True) if h1 else "Unknown"
-        label = re.sub(r"^Weekend Domestic Box Office\s*", "", label).strip()
+        label = re.sub(r"^(?:Weekend|Daily) Domestic Box Office\s*", "", label).strip()
 
         # First <table> is the main chart
         table = soup.find("table")
