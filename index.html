@@ -1944,7 +1944,7 @@
     <div class="stat-box">
       <div class="stat-label">PH Films Charting</div>
       <div class="stat-value">4</div>
-      <div class="stat-sub">Weekend 18 · May 6–10, 2026</div>
+      <div class="stat-sub">Weekend 19 · May 13–17, 2026</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">US Weekend #1 Film</div>
@@ -1960,7 +1960,7 @@
 
   <div class="tabs">
     <div class="tab active" onclick="switchTab(this, 'ph')">PH Weekly Box Office</div>
-    <div class="tab" onclick="switchTab(this, 'intl')">US Weekly Box Office</div>
+    <div class="tab" onclick="switchTab(this, 'intl')">US Daily Box Office</div>
     <div class="tab" onclick="switchTab(this, 'alltime')">PH All Time Box Office</div>
   </div>
 
@@ -1968,7 +1968,7 @@
     <!-- PH WEEKLY -->
     <div id="table-ph" class="bo-table-wrap">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.boxofficemojo.com/weekend/2026W18/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 18, May 6–10, 2026</a>
+        Source: <a href="https://www.boxofficemojo.com/weekend/2026W19/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 19, May 13–17, 2026</a>
       </p>
       <table>
         <thead>
@@ -1986,7 +1986,7 @@
     <!-- US WEEKLY -->
     <div id="table-intl" class="bo-table-wrap" style="display:none">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, May 22, 2026</a>
+        Source: <a href="https://www.the-numbers.com/daily-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Daily Domestic Box Office, Sunday May 24, 2026</a>
       </p>
       <table>
         <thead>
@@ -2745,33 +2745,38 @@ function navigate(page) {
 
 // ===== BOX OFFICE DATA =====
 
-// PH WEEKLY — Source: Box Office Mojo · Weekend 18, 2026 (May 6–10, 2026)
-// https://www.boxofficemojo.com/weekend/2026W18/?area=PH
+// PH WEEKLY — Source: Box Office Mojo · Weekend 19, 2026 (May 13–17, 2026)
+// https://www.boxofficemojo.com/weekend/2026W19/?area=PH
 const phMovies = [
-  { rank:1, title:'The Devil Wears Prada 2', weeks:1 },
-  { rank:2, title:'Michael', weeks:2 },
-  { rank:3, title:'The Super Mario Galaxy Movie', weeks:5 },
-  { rank:4, title:'Ready or Not 2: Here I Come', weeks:6 },
+  { rank:1, title:'The Devil Wears Prada 2', weeks:3 },
+  { rank:2, title:'Michael', weeks:4 },
+  { rank:3, title:'The Super Mario Galaxy Movie', weeks:7 },
 ];
 
-// US WEEKLY — Source: The Numbers · Weekend Domestic Box Office, May 22, 2026
-// https://www.the-numbers.com/weekend-box-office-chart
+// US DAILY — Source: The Numbers · Daily Domestic Box Office, Sunday May 24, 2026
+// https://www.the-numbers.com/daily-box-office-chart
 const intlMovies = [
-  { rank:1,  title:'Obsession', weeks:2 },
-  { rank:2,  title:'Michael', weeks:5 },
-  { rank:3,  title:'The Sheep Detectives', weeks:3 },
-  { rank:4,  title:'I Love Boosters', weeks:1 },
-  { rank:5,  title:'The Super Mario Galaxy Movie', weeks:8 },
-  { rank:6,  title:'Project Hail Mary', weeks:10 },
-  { rank:7,  title:'Is God Is', weeks:2 },
-  { rank:8,  title:'Hokum', weeks:4 },
-  { rank:9,  title:'Shrek', weeks:2 },
-  { rank:10, title:'Silent Friend', weeks:3 },
-  { rank:11, title:'The Wizard of the Kremlin', weeks:2 },
-  { rank:12, title:'Animal Farm', weeks:4 },
-  { rank:13, title:'The Python Hunt', weeks:3 },
-  { rank:14, title:'Mad Bills to Pay', weeks:6 },
-  { rank:15, title:'John Lilly and the Earth Coincidence Control Office', weeks:9 },
+  { rank:1,  title:'The Mandalorian & Grogu', weeks:1 },
+  { rank:2,  title:'Obsession', weeks:2 },
+  { rank:3,  title:'Michael', weeks:5 },
+  { rank:4,  title:'The Devil Wears Prada 2', weeks:4 },
+  { rank:5,  title:'The Sheep Detectives', weeks:3 },
+  { rank:6,  title:'Passenger', weeks:1 },
+  { rank:7,  title:'Mortal Kombat II', weeks:3 },
+  { rank:8,  title:'The Super Mario Galaxy Movie', weeks:8 },
+  { rank:9,  title:'I Love Boosters', weeks:1 },
+  { rank:10, title:'Project Hail Mary', weeks:10 },
+  { rank:11, title:'Is God Is', weeks:2 },
+  { rank:12, title:'Hokum', weeks:4 },
+  { rank:13, title:'Corporate Retreat', weeks:1 },
+  { rank:14, title:'Top Gun', weeks:1 },
+  { rank:15, title:'Hoppers', weeks:12 },
+  { rank:16, title:'Shrek', weeks:1 },
+  { rank:17, title:'Mobile Suit Gundam Hathaway: The Sorcery of Nymph Circe', weeks:2 },
+  { rank:18, title:'Saccharine', weeks:1 },
+  { rank:19, title:'The Wizard of the Kremlin', weeks:2 },
+  { rank:20, title:'Deep Water', weeks:4 },
+  { rank:21, title:'Animal Farm', weeks:4 },
 ];
 
 // PH ALL TIME TOP 20 — Source: Wikipedia · List of Highest-Grossing Philippine Films
