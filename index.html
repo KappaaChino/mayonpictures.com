@@ -1971,7 +1971,7 @@
     <!-- PH WEEKLY -->
     <div id="table-ph" class="bo-table-wrap">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.boxofficemojo.com/weekend/2026W20/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 20, May 20–24, 2026</a>
+        Source: <a href="https://www.boxofficemojo.com/weekend/2026W20/?area=PH&ref_=bo_wey_table_1" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 20, 2026, May 20-24, 2026</a>
       </p>
       <table>
         <thead>
@@ -1989,7 +1989,7 @@
     <!-- US WEEKLY -->
     <div id="table-intl" class="bo-table-wrap" style="display:none">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, May 22–24, 2026</a>
+        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, Sunday, May 31, 2026</a>
       </p>
       <table>
         <thead>
@@ -2926,57 +2926,76 @@ function navigate(page) {
 }
 
 // ===== BOX OFFICE DATA =====
+// Auto-updated by GitHub Actions every Monday — Last updated: June 01, 2026
 
-// PH WEEKLY — Source: Box Office Mojo · Weekend 20, 2026 (May 20–24, 2026)
-// https://www.boxofficemojo.com/weekend/2026W20/?area=PH
+// PH WEEKLY — Source: Box Office Mojo · Weekend 20, 2026 (May 20-24, 2026)
+// https://www.boxofficemojo.com/weekend/2026W20/?area=PH&ref_=bo_wey_table_1
 const phMovies = [
   { rank:1, title:'Star Wars: The Mandalorian and Grogu', weeks:1 },
   { rank:2, title:'The Devil Wears Prada 2', weeks:4 },
+  { rank:3, title:'Michael', weeks:5 },
+  { rank:4, title:'The Super Mario Galaxy Movie', weeks:8 }
 ];
 
-// US WEEKLY — Source: The Numbers · Weekend Domestic Box Office, May 22-24, 2026
-// https://www.the-numbers.com/weekend-box-office-chart
+// US WEEKLY — Source: The Numbers · Sunday, May 31, 2026
+// https://www.the-numbers.com/daily-box-office-chart
 const intlMovies = [
-  { rank:1,  title:'The Mandalorian & Grogu', weeks:1 },
-  { rank:2,  title:'Obsession', weeks:2 },
-  { rank:3,  title:'Michael', weeks:5 },
-  { rank:4,  title:'The Devil Wears Prada 2', weeks:4 },
-  { rank:5,  title:'The Sheep Detectives', weeks:3 },
-  { rank:6,  title:'Passenger', weeks:1 },
-  { rank:7,  title:'Mortal Kombat II', weeks:3 },
-  { rank:8,  title:'The Super Mario Galaxy Movie', weeks:8 },
-  { rank:9,  title:'I Love Boosters', weeks:1 },
-  { rank:10, title:'Project Hail Mary', weeks:10 },
-  { rank:11, title:'Is God Is', weeks:2 },
-  { rank:12, title:'Hokum', weeks:4 },
-  { rank:13, title:'Corporate Retreat', weeks:1 },
-  { rank:14, title:'Top Gun', weeks:1 },
-  { rank:15, title:'Hoppers', weeks:12 },
+  { rank:1, title:'Backrooms', weeks:1 },
+  { rank:2, title:'Obsession', weeks:3 },
+  { rank:3, title:'Star Wars: The Mandalorian and Grogu', weeks:2 },
+  { rank:4, title:'Michael', weeks:6 },
+  { rank:5, title:'The Breadwinner', weeks:1 },
+  { rank:6, title:'The Devil Wears Prada 2', weeks:5 },
+  { rank:7, title:'The Sheep Detectives', weeks:4 },
+  { rank:8, title:'Pressure', weeks:1 },
+  { rank:9, title:'Passenger', weeks:2 },
+  { rank:10, title:'Mortal Kombat II', weeks:4 },
+  { rank:11, title:'The Super Mario Galaxy Movie', weeks:9 },
+  { rank:12, title:'I Love Boosters', weeks:2 },
+  { rank:13, title:'Tuner', weeks:2 },
+  { rank:14, title:'Project Hail Mary', weeks:11 },
+  { rank:15, title:'Is God Is', weeks:3 },
+  { rank:16, title:'Power Ballad', weeks:1 },
+  { rank:17, title:'Hokum', weeks:5 },
+  { rank:18, title:'In the Grey', weeks:3 },
+  { rank:19, title:'Silent Friend', weeks:4 },
+  { rank:20, title:'Shrek', weeks:1307 },
+  { rank:21, title:'Hoppers', weeks:13 },
+  { rank:22, title:'Terminator 2: Judgment Day', weeks:1822 },
+  { rank:23, title:'Deep Water', weeks:5 },
+  { rank:24, title:'Time And Water', weeks:1 },
+  { rank:25, title:'Corporate Retreat', weeks:2 },
+  { rank:26, title:'A Great Awakening', weeks:9 },
+  { rank:27, title:'Kontinental ‘25', weeks:10 },
+  { rank:28, title:'I Swear', weeks:6 },
+  { rank:29, title:'Fuze', weeks:6 },
+  { rank:30, title:'Erupcja', weeks:7 },
+  { rank:31, title:'Strange Journey: The Story of Rocky Horror', weeks:36 }
 ];
 
 // PH ALL TIME TOP 20 — Source: Wikipedia · List of Highest-Grossing Philippine Films
 // https://en.wikipedia.org/wiki/List_of_highest-grossing_Philippine_films
 const alltimeMovies = [
-  { rank:1,  title:'Hello, Love, Again',               year:2024, gross:'₱1.60B', prod:'ABS-CBN Studios / Star Cinema / GMA Pictures' },
-  { rank:2,  title:'Rewind',                           year:2023, gross:'₱924M',  prod:'Star Cinema / APT Entertainment / AgostoDos Pictures' },
-  { rank:3,  title:'Hello, Love, Goodbye',             year:2019, gross:'₱880M',  prod:'Star Cinema' },
-  { rank:4,  title:'The Hows of Us',                   year:2018, gross:'₱810M',  prod:'Star Cinema' },
-  { rank:5,  title:'The Super Parental Guardians',     year:2016, gross:'₱598M',  prod:'Star Cinema' },
-  { rank:6,  title:'Fantastica',                       year:2018, gross:'₱596M',  prod:'Star Cinema / Viva Films' },
-  { rank:7,  title:'Starting Over Again',              year:2014, gross:'₱579M',  prod:'Star Cinema' },
-  { rank:8,  title:'Gandarrapiddo: The Revenger Squad',year:2017, gross:'₱571M',  prod:'Star Cinema / Viva Films' },
-  { rank:9,  title:'A Second Chance',                  year:2015, gross:'₱556M',  prod:'Star Cinema' },
-  { rank:10, title:'Miracle in Cell No. 7',            year:2019, gross:'₱543M',  prod:'Viva Films' },
-  { rank:11, title:'Beauty and the Bestie',            year:2015, gross:'₱526M',  prod:'Star Cinema / Viva Films' },
-  { rank:12, title:'And the Breadwinner Is...',        year:2024, gross:'₱460M',  prod:'ABS-CBN Studios / Star Cinema / The IdeaFirst Company' },
-  { rank:13, title:'The Amazing Praybeyt Benjamin',    year:2014, gross:'₱456M',  prod:'Star Cinema / Viva Films' },
-  { rank:14, title:'Un/Happy for You',                 year:2024, gross:'₱450M',  prod:'ABS-CBN Studios / Star Cinema / Viva Films' },
-  { rank:15, title:'Girl, Boy, Bakla, Tomboy',         year:2013, gross:'₱436M',  prod:'Star Cinema / Viva Films' },
-  { rank:16, title:'It Takes a Man and a Woman',       year:2013, gross:'₱405M',  prod:'Star Cinema / Viva Films' },
-  { rank:17, title:'My Ex and Whys',                   year:2017, gross:'₱400M',  prod:'Star Cinema' },
-  { rank:18, title:'Sisterakas',                       year:2012, gross:'₱393M',  prod:'Star Cinema / Viva Films' },
-  { rank:19, title:'Call Me Mother',                   year:2025, gross:'₱392M',  prod:'Star Cinema / The IdeaFirst Company / Viva Films' },
-  { rank:20, title:'My Bebe Love: KiligPaMore',        year:2015, gross:'₱385M',  prod:'GMA Pictures / APT Entertainment' },
+  { rank:1, title:'Hello, Love, Again', year:2024, gross:'₱1.6 billion', prod:'ABS-CBN Studios,Star Cinema,GMA Pictures' },
+  { rank:2, title:'Rewind', year:2023, gross:'₱924 million[a]', prod:'Star Cinema,APT Entertainment,AgostoDos Pictures' },
+  { rank:3, title:'Hello, Love, Goodbye', year:2019, gross:'₱880 million', prod:'Star Cinema' },
+  { rank:4, title:'The Hows of Us', year:2018, gross:'₱810 million', prod:'Star Cinema' },
+  { rank:5, title:'The Super Parental Guardians', year:2016, gross:'₱598 million', prod:'Star Cinema' },
+  { rank:6, title:'Fantastica', year:2018, gross:'₱596 million', prod:'Star Cinema,Viva Films' },
+  { rank:7, title:'Starting Over Again', year:2014, gross:'₱579 million', prod:'Star Cinema' },
+  { rank:8, title:'Gandarrapiddo: The Revenger Squad', year:2017, gross:'₱571 million', prod:'Star Cinema,Viva Films' },
+  { rank:9, title:'A Second Chance', year:2015, gross:'₱556 million', prod:'Star Cinema' },
+  { rank:10, title:'Miracle in Cell No. 7', year:2019, gross:'₱543 million', prod:'Viva Films' },
+  { rank:11, title:'Beauty and the Bestie', year:2015, gross:'₱526 million', prod:'Star Cinema,Viva Films' },
+  { rank:12, title:'And the Breadwinner Is...', year:2024, gross:'₱460 million', prod:'ABS-CBN Studios,Star Cinema,The IdeaFirst Company' },
+  { rank:13, title:'The Amazing Praybeyt Benjamin', year:2014, gross:'₱456 million', prod:'Star Cinema,Viva Films' },
+  { rank:14, title:'Un/Happy for You', year:2024, gross:'₱450 million', prod:'ABS-CBN Studios,Star Cinema,Viva Films' },
+  { rank:15, title:'Girl, Boy, Bakla, Tomboy', year:2013, gross:'₱436 million', prod:'Star Cinema,Viva Films' },
+  { rank:16, title:'It Takes a Man and a Woman', year:2013, gross:'₱405 million', prod:'Star Cinema,Viva Films' },
+  { rank:17, title:'My Ex and Whys', year:2017, gross:'₱400 million', prod:'Star Cinema' },
+  { rank:18, title:'Sisterakas', year:2012, gross:'₱393 million', prod:'Star Cinema,Viva Films' },
+  { rank:19, title:'Call Me Mother', year:2025, gross:'₱392 million', prod:'Star Cinema,The IdeaFirst Company, Viva Films' },
+  { rank:20, title:'My Bebe Love: KiligPaMore', year:2015, gross:'₱385 million', prod:'GMA Pictures,APT Entertainment' }
 ];
 
 function weekBadge(w) {
