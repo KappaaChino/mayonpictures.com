@@ -1942,17 +1942,17 @@
     <div class="stat-box">
       <div class="stat-label">PH Weekend #1 Film</div>
       <div class="stat-value">Mandalorian</div>
-      <div class="stat-sub">Star Wars: The Mandalorian and Grogu · Week 1</div>
+      <div class="stat-sub">Star Wars: The Mandalorian and Grogu · Week 2</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">PH Films Charting</div>
-      <div class="stat-value">2</div>
-      <div class="stat-sub">Weekend 20 · May 20–24, 2026</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">Weekend 21 · May 27–31, 2026</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">US Weekend #1 Film</div>
-      <div class="stat-value">Mandalorian</div>
-      <div class="stat-sub">The Mandalorian &amp; Grogu · Week 1</div>
+      <div class="stat-value">Backrooms</div>
+      <div class="stat-sub">Backrooms · $81.4M Opening</div>
     </div>
     <div class="stat-box">
       <div class="stat-label">PH All-Time Record</div>
@@ -1971,7 +1971,7 @@
     <!-- PH WEEKLY -->
     <div id="table-ph" class="bo-table-wrap">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.boxofficemojo.com/weekend/2026W20/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 20, May 20–24, 2026</a>
+        Source: <a href="https://www.boxofficemojo.com/weekend/2026W21/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 21, May 27–31, 2026</a>
       </p>
       <table>
         <thead>
@@ -1989,7 +1989,7 @@
     <!-- US WEEKLY -->
     <div id="table-intl" class="bo-table-wrap" style="display:none">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, May 22–24, 2026</a>
+        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, May 29, 2026</a>
       </p>
       <table>
         <thead>
@@ -2938,31 +2938,33 @@ function navigate(page) {
 
 // ===== BOX OFFICE DATA =====
 
-// PH WEEKLY — Source: Box Office Mojo · Weekend 20, 2026 (May 20–24, 2026)
-// https://www.boxofficemojo.com/weekend/2026W20/?area=PH
+// PH WEEKLY — Source: Box Office Mojo · Weekend 21, 2026 (May 27–31, 2026)
+// https://www.boxofficemojo.com/weekend/2026W21/?area=PH
 const phMovies = [
-  { rank:1, title:'Star Wars: The Mandalorian and Grogu', weeks:1 },
-  { rank:2, title:'The Devil Wears Prada 2', weeks:4 },
+  { rank:1, title:'Star Wars: The Mandalorian and Grogu', weeks:2 },
+  { rank:2, title:'The Devil Wears Prada 2', weeks:5 },
+  { rank:3, title:'Michael', weeks:6 },
+  { rank:4, title:'The Super Mario Galaxy Movie', weeks:9 },
 ];
 
-// US WEEKLY — Source: The Numbers · Weekend Domestic Box Office, May 22-24, 2026
+// US WEEKLY — Source: The Numbers · Weekend Domestic Box Office, May 29, 2026
 // https://www.the-numbers.com/weekend-box-office-chart
 const intlMovies = [
-  { rank:1,  title:'The Mandalorian & Grogu', weeks:1 },
-  { rank:2,  title:'Obsession', weeks:2 },
-  { rank:3,  title:'Michael', weeks:5 },
-  { rank:4,  title:'The Devil Wears Prada 2', weeks:4 },
-  { rank:5,  title:'The Sheep Detectives', weeks:3 },
-  { rank:6,  title:'Passenger', weeks:1 },
-  { rank:7,  title:'Mortal Kombat II', weeks:3 },
-  { rank:8,  title:'The Super Mario Galaxy Movie', weeks:8 },
-  { rank:9,  title:'I Love Boosters', weeks:1 },
-  { rank:10, title:'Project Hail Mary', weeks:10 },
-  { rank:11, title:'Is God Is', weeks:2 },
-  { rank:12, title:'Hokum', weeks:4 },
-  { rank:13, title:'Corporate Retreat', weeks:1 },
-  { rank:14, title:'Top Gun', weeks:1 },
-  { rank:15, title:'Hoppers', weeks:12 },
+  { rank:1,  title:'Backrooms', weeks:1 },
+  { rank:2,  title:'Obsession', weeks:3 },
+  { rank:3,  title:'Star Wars: The Mandalorian and Grogu', weeks:2 },
+  { rank:4,  title:'Michael', weeks:6 },
+  { rank:5,  title:'The Breadwinner', weeks:1 },
+  { rank:6,  title:'The Devil Wears Prada 2', weeks:5 },
+  { rank:7,  title:'Pressure', weeks:1 },
+  { rank:8,  title:'The Sheep Detectives', weeks:4 },
+  { rank:9,  title:'Passenger', weeks:2 },
+  { rank:10, title:'Mortal Kombat II', weeks:4 },
+  { rank:11, title:'Tuner', weeks:2 },
+  { rank:12, title:'The Super Mario Galaxy Movie', weeks:9 },
+  { rank:13, title:'I Love Boosters', weeks:2 },
+  { rank:14, title:'Project Hail Mary', weeks:11 },
+  { rank:15, title:'Revolutionary America', weeks:1 },
 ];
 
 // PH ALL TIME TOP 20 — Source: Wikipedia · List of Highest-Grossing Philippine Films
