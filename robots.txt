@@ -1,0 +1,6 @@
+# robots.txt for kappaaachino.github.io
+# Block all crawlers from indexing the GitHub Pages URL.
+# The canonical site is https://mayonpictures.com
+
+User-agent: *
+Disallow: /
