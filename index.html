@@ -1648,6 +1648,211 @@
   }
   .vote-icon { font-size: 16px; }
 
+
+  /* ===================== ORIGINALS (DOCUMENTARY) ===================== */
+  .orig-header {
+    padding: 160px 48px 60px;
+    border-bottom: 1px solid rgba(200,189,182,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .orig-feature {
+    padding: 60px 48px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    align-items: center;
+    border-bottom: 1px solid rgba(200,189,182,0.1);
+  }
+  .orig-screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: radial-gradient(ellipse at 50% 85%, #2a1a12 0%, #0c0b0a 70%);
+    border: 1px solid rgba(200,189,182,0.1);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .orig-screen iframe,
+  .orig-screen img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    object-fit: cover;
+  }
+  .orig-teaser { text-align: center; padding: 24px; }
+  .orig-teaser svg { width: 96px; height: 96px; margin-bottom: 18px; }
+  .orig-teaser-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: var(--snow);
+  }
+  .orig-teaser-title span { color: var(--lava); }
+  .orig-teaser-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: var(--smoke);
+    margin-top: 8px;
+  }
+  .orig-badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(212,168,67,0.4);
+    padding: 5px 12px;
+    margin-bottom: 20px;
+  }
+  .orig-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 3.6vw, 48px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: var(--snow);
+    margin-bottom: 12px;
+  }
+  .orig-title.muted { color: var(--smoke); }
+  .orig-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--lava);
+    margin-bottom: 8px;
+  }
+  .orig-meta { margin: 20px 0 4px; border: 1px solid rgba(200,189,182,0.08); }
+  .orig-meta-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(200,189,182,0.06);
+    font-size: 11px;
+  }
+  .orig-meta-row:last-child { border-bottom: none; }
+  .orig-meta-label {
+    color: var(--smoke);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  .orig-meta-val { color: var(--mist); text-align: right; }
+  .orig-synopsis {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--mist);
+    text-align: justify;
+    margin: 20px 0 28px;
+  }
+  .orig-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+  .orig-btn {
+    display: inline-block;
+    background: var(--lava);
+    color: #ffffff;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 26px;
+    text-decoration: none;
+    border: 1px solid var(--lava);
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .orig-btn:hover { background: var(--ember); border-color: var(--ember); }
+  .orig-btn.ghost { background: transparent; color: var(--snow); border-color: rgba(200,189,182,0.3); }
+  .orig-btn.ghost:hover { border-color: var(--lava); background: transparent; }
+  .orig-credits { padding: 60px 48px; border-bottom: 1px solid rgba(200,189,182,0.1); }
+  .orig-credits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2px;
+    background: rgba(200,189,182,0.06);
+    margin-top: 32px;
+  }
+  .orig-credit { background: var(--ash); padding: 24px 28px; }
+  .orig-credit-role {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--lava);
+    margin-bottom: 8px;
+  }
+  .orig-credit-name { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--snow); }
+  .orig-notify { padding: 60px 48px 80px; text-align: center; }
+  .orig-notify p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--smoke);
+    max-width: 640px;
+    margin: 8px auto 28px;
+    line-height: 1.7;
+  }
+  .orig-notify .orig-cta { justify-content: center; }
+
+  /* ===================== STORY SUBMISSIONS BOARD ===================== */
+  .subs-board { padding: 60px 48px; border-bottom: 1px solid rgba(200,189,182,0.1); }
+  .subs-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(200,189,182,0.06);
+    margin-top: 32px;
+  }
+  .subs-stat { background: var(--ash); padding: 28px; text-align: center; }
+  .subs-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--lava);
+    line-height: 1;
+  }
+  .subs-stat-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-top: 8px;
+  }
+  .subs-empty {
+    background: var(--ash);
+    border: 1px dashed rgba(200,189,182,0.18);
+    padding: 44px 32px;
+    text-align: center;
+    margin-top: 32px;
+  }
+  .subs-empty-title { font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic; color: var(--snow); margin-bottom: 10px; }
+  .subs-empty-sub { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--smoke); line-height: 1.7; max-width: 560px; margin: 0 auto; }
+
+  @media (max-width: 900px) {
+    .orig-header { padding: 140px 24px 40px; }
+    .orig-feature { grid-template-columns: 1fr; gap: 32px; padding: 40px 24px; }
+    .orig-credits { padding: 40px 24px; }
+    .orig-notify { padding: 40px 24px 60px; }
+    .subs-board { padding: 40px 24px; }
+    .subs-stats { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .orig-teaser { padding: 16px; }
+    .orig-teaser svg { width: 64px; height: 64px; margin-bottom: 10px; }
+    .orig-teaser-title { font-size: 18px; letter-spacing: 4px; }
+    .orig-teaser-sub { font-size: 15px; letter-spacing: 1px; }
+    .pitch-row { grid-template-columns: 44px 1fr; gap: 16px; padding: 22px 20px; }
+    .pitch-row .pitch-status { grid-column: 2; justify-self: start; }
+    .pitch-num { font-size: 28px; }
+    nav { flex-wrap: wrap; justify-content: center; row-gap: 10px; padding: 12px 16px; }
+    .nav-links { width: 100%; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .nav-links li a { font-size: 9px; letter-spacing: 1px; }
+  }
 </style>
 </head>
 <body>
@@ -1703,6 +1908,7 @@
     <li><a onclick="navigate('home')" id="nav-home" class="active">Home</a></li>
     <li><a onclick="navigate('boxoffice')" id="nav-boxoffice">Box Office</a></li>
     <li><a onclick="navigate('reviews')" id="nav-reviews">Reviews</a></li>
+    <li><a onclick="navigate('originals')" id="nav-originals">Originals</a></li>
     <li><a onclick="navigate('pitches')" id="nav-pitches">Pitch Us</a></li>
     <li><a onclick="navigate('about')" id="nav-about">About</a></li>
   </ul>
@@ -1879,7 +2085,7 @@
       <ul>
         <li onclick="navigate('home')">Home</li>
         <li onclick="navigate('boxoffice')">Box Office</li>
-        <li onclick="navigate('reviews')">Reviews</li>
+        <li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('originals')">Originals</li>
         <li onclick="navigate('pitches')">Pitch Us</li>
       </ul>
     </div>
@@ -1947,7 +2153,7 @@
     <!-- PH WEEKLY -->
     <div id="table-ph" class="bo-table-wrap">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.boxofficemojo.com/weekend/2026W42/?area=PH&ref_=bo_wey_table_1" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 42, 2026, October 21-25, 2026</a>
+        Source: <a href="https://www.boxofficemojo.com/weekend/2026W41/?area=PH" target="_blank" style="color:var(--lava); text-decoration:none;">Box Office Mojo: Philippine Weekend 41, October 14–18, 2026</a>
       </p>
       <table>
         <thead>
@@ -1965,7 +2171,7 @@
     <!-- US WEEKLY -->
     <div id="table-intl" class="bo-table-wrap" style="display:none">
       <p style="font-size:11px; color:var(--smoke); margin: 32px 0 16px; line-height:1.8;">
-        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, Sunday, November 1, 2026</a>
+        Source: <a href="https://www.the-numbers.com/weekend-box-office-chart" target="_blank" style="color:var(--lava); text-decoration:none;">The Numbers: US Weekend Domestic Box Office, October 30, 2026</a>
       </p>
       <table>
         <thead>
@@ -2007,7 +2213,7 @@
       <div class="footer-tagline">Where Stories Erupt.</div>
       <div class="footer-copy">© 2023 Mayon Pictures · mayonpictures.com</div>
     </div>
-    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('originals')">Originals</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
     <div class="footer-col"><h4>Data Source</h4><ul><li>OctoArts</li><li>FDCP Reports</li><li>Box Office Mojo</li><li>TheNumbers.com</li></ul></div>
     <div class="footer-col"><h4>Connect</h4><ul><li>Instagram</li><li><a href="https://www.facebook.com/profile.php?id=61590517229583" target="_blank" style="color:inherit; text-decoration:none;">Facebook</a></li><li>Contact</li></ul></div>
   </footer>
@@ -2741,7 +2947,7 @@
     <div class="footer-col"><h4>Navigate</h4><ul>
       <li onclick="navigate('home')">Home</li>
       <li onclick="navigate('boxoffice')">Box Office</li>
-      <li onclick="navigate('reviews')">Reviews</li>
+      <li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('originals')">Originals</li>
       <li onclick="navigate('pitches')">Pitch Us</li>
       <li onclick="navigate('about')">About</li>
     </ul></div>
@@ -2834,6 +3040,15 @@
     </div>
   </div>
 
+  <!-- Story submissions board -->
+  <div class="subs-board">
+    <div class="section-label">Story Submissions</div>
+    <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:700; margin-bottom:8px;">Stories <em>coming in</em></div>
+    <p style="color:var(--smoke); font-size:13px; line-height:1.8; max-width:560px;">Writers and filmmakers are sending their stories to Mayon Pictures, and every one gets read. Submissions we are tracking appear here by title, format and status, listed only with the writer's permission.</p>
+    <div class="subs-stats" id="subs-stats"></div>
+    <div class="pitches-feed" id="subs-feed"></div>
+  </div>
+
   <!-- In Development feed -->
   <div class="recent-pitches">
     <div class="section-label">In Development</div>
@@ -2850,7 +3065,7 @@
       <div class="footer-tagline">Where Stories Erupt.</div>
       <div class="footer-copy">© 2023 Mayon Pictures · mayonpictures.com</div>
     </div>
-    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('originals')">Originals</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
     <div class="footer-col"><h4>Resources</h4><ul><li>Submission Guidelines</li><li>FAQ</li><li>Previous Picks</li><li>Greenlit Projects</li></ul></div>
     <div class="footer-col"><h4>Connect</h4><ul><li>Instagram</li><li><a href="https://www.facebook.com/profile.php?id=61590517229583" target="_blank" style="color:inherit; text-decoration:none;">Facebook</a></li><li>Contact</li></ul></div>
   </footer>
@@ -2913,85 +3128,56 @@ function navigate(page) {
 }
 
 // ===== BOX OFFICE DATA =====
-// Auto-updated by GitHub Actions every Monday — Last updated: November 02, 2026
 
-// PH WEEKLY — Source: Box Office Mojo · Weekend 42, 2026 (October 21-25, 2026)
-// https://www.boxofficemojo.com/weekend/2026W42/?area=PH&ref_=bo_wey_table_1
+// PH WEEKLY — Source: Box Office Mojo · Weekend 41, 2026 (October 14–18, 2026)
+// https://www.boxofficemojo.com/weekend/2026W41/?area=PH
 const phMovies = [
-  { rank:1, title:'Forgotten Island', weeks:5 },
-  { rank:2, title:'Whalefall', weeks:2 },
-  { rank:3, title:'Other Mommy', weeks:3 },
-  { rank:4, title:'Verity', weeks:4 },
-  { rank:5, title:'Avengers: Endgame', weeks:5 },
-  { rank:6, title:'Stop! That! Train!', weeks:5 },
-  { rank:7, title:'Obsession', weeks:22 }
+  { rank:1, title:'Street Fighter', weeks:1 },
+  { rank:2, title:'Forgotten Island', weeks:4 },
+  { rank:3, title:'Whalefall', weeks:1 },
+  { rank:4, title:'Other Mommy', weeks:2 },
+  { rank:5, title:'Verity', weeks:3 },
+  { rank:6, title:'Avengers: Endgame 2026 Re-release', weeks:4 },
 ];
 
-// US WEEKLY — Source: The Numbers · Sunday, November 1, 2026
-// https://www.the-numbers.com/daily-box-office-chart
+// US WEEKLY — Source: The Numbers · Weekend Domestic Box Office, October 30, 2026
+// https://www.the-numbers.com/weekend-box-office-chart
 const intlMovies = [
-  { rank:1, title:'You Can See Everything', weeks:3 },
-  { rank:2, title:'Wildwood', weeks:2 },
-  { rank:3, title:'Clayface', weeks:2 },
-  { rank:4, title:'Wicker', weeks:2 },
-  { rank:5, title:'Street Fighter', weeks:3 },
-  { rank:6, title:'Other Mommy', weeks:4 },
-  { rank:7, title:'Resident Evil', weeks:7 },
-  { rank:8, title:'Heart of the Beast', weeks:6 },
-  { rank:9, title:'Sense and Sensibility', weeks:3 },
-  { rank:10, title:'Verity', weeks:5 },
-  { rank:11, title:'The Only Living Pickpocket in New York', weeks:2 },
-  { rank:12, title:'Whalefall', weeks:3 },
-  { rank:13, title:'Everest: The Other Side', weeks:1 },
-  { rank:14, title:'Sight & Sound Presents: JOSHUA Live!', weeks:1 },
-  { rank:15, title:'Forgotten Island', weeks:6 },
-  { rank:16, title:'Christmas at the Kringles', weeks:1 },
-  { rank:17, title:'Fjord', weeks:4 },
-  { rank:18, title:'La bola negra', weeks:3 },
-  { rank:19, title:'Once Upon a Time…in Hollywood', weeks:380 },
-  { rank:20, title:'The Mosquito Bowl', weeks:1 },
-  { rank:21, title:'Breeder', weeks:1 },
-  { rank:22, title:'Klara and the Sun', weeks:2 },
-  { rank:23, title:'Paging Hezbollah', weeks:1 },
-  { rank:24, title:'Spider-Man: Brand New Day', weeks:14 },
-  { rank:25, title:'Fatherland', weeks:2 },
-  { rank:26, title:'Your Mother, Your Mother, Your Mother', weeks:6 },
-  { rank:27, title:'Primetime', weeks:6 },
-  { rank:28, title:'A Talent for Murder', weeks:2 },
-  { rank:29, title:'Once Upon a Time in Harlem', weeks:3 },
-  { rank:30, title:'Naza', weeks:5 },
-  { rank:31, title:'Tad and the Magic Lamp', weeks:1 },
-  { rank:32, title:'Musk', weeks:4 },
-  { rank:33, title:'Crawlers', weeks:3 },
-  { rank:34, title:'Manhunter: The Final Cut', weeks:2099 },
-  { rank:35, title:'Closure', weeks:1 },
-  { rank:36, title:'You Can’t Leave', weeks:3 },
-  { rank:37, title:'Buddy', weeks:10 }
+  { rank:1,  title:'You Can See Everything', weeks:3 },
+  { rank:2,  title:'Clayface', weeks:2 },
+  { rank:3,  title:'Wicker', weeks:2 },
+  { rank:4,  title:'Other Mommy', weeks:4 },
+  { rank:5,  title:'Sense and Sensibility', weeks:3 },
+  { rank:6,  title:'Verity', weeks:5 },
+  { rank:7,  title:'Whalefall', weeks:3 },
+  { rank:8,  title:'Everest: The Other Side', weeks:1 },
+  { rank:9,  title:'Sight & Sound Presents: JOSHUA Live!', weeks:1 },
+  { rank:10, title:'Fjord', weeks:4 },
 ];
 
 // PH ALL TIME TOP 20 — Source: Wikipedia · List of Highest-Grossing Philippine Films
 // https://en.wikipedia.org/wiki/List_of_highest-grossing_Philippine_films
 const alltimeMovies = [
-  { rank:1, title:'Hello, Love, Again', year:2024, gross:'₱1.6 billion', prod:'ABS-CBN Studios,Star Cinema,GMA Pictures' },
-  { rank:2, title:'Rewind', year:2023, gross:'₱924 million[a]', prod:'Star Cinema,APT Entertainment,AgostoDos Pictures' },
-  { rank:3, title:'Hello, Love, Goodbye', year:2019, gross:'₱880 million', prod:'Star Cinema' },
-  { rank:4, title:'The Hows of Us', year:2018, gross:'₱810 million', prod:'Star Cinema' },
-  { rank:5, title:'The Super Parental Guardians', year:2016, gross:'₱598 million', prod:'Star Cinema' },
-  { rank:6, title:'Fantastica', year:2018, gross:'₱596 million', prod:'Star Cinema,Viva Films' },
-  { rank:7, title:'Starting Over Again', year:2014, gross:'₱579 million', prod:'Star Cinema' },
-  { rank:8, title:'Gandarrapiddo: The Revenger Squad', year:2017, gross:'₱571 million', prod:'Star Cinema,Viva Films' },
-  { rank:9, title:'A Second Chance', year:2015, gross:'₱556 million', prod:'Star Cinema' },
-  { rank:10, title:'Miracle in Cell No. 7', year:2019, gross:'₱543 million', prod:'Viva Films' },
-  { rank:11, title:'Beauty and the Bestie', year:2015, gross:'₱529 million', prod:'Star Cinema,Viva Films' },
-  { rank:12, title:'And the Breadwinner Is...', year:2024, gross:'₱460 million', prod:'ABS-CBN Studios,Star Cinema,The IdeaFirst Company' },
-  { rank:13, title:'The Amazing Praybeyt Benjamin', year:2014, gross:'₱456 million', prod:'Star Cinema,Viva Films' },
-  { rank:14, title:'Un/Happy for You', year:2024, gross:'₱450 million', prod:'ABS-CBN Studios,Star Cinema,Viva Films' },
-  { rank:15, title:'Girl, Boy, Bakla, Tomboy', year:2013, gross:'₱436 million', prod:'Star Cinema,Viva Films' },
-  { rank:16, title:'It Takes a Man and a Woman', year:2013, gross:'₱405 million', prod:'Star Cinema,Viva Films' },
-  { rank:17, title:'My Ex and Whys', year:2017, gross:'₱400 million', prod:'Star Cinema' },
-  { rank:18, title:'Sisterakas', year:2012, gross:'₱393 million', prod:'Star Cinema,Viva Films' },
-  { rank:19, title:'Call Me Mother', year:2025, gross:'₱392 million', prod:'Star Cinema,The IdeaFirst Company, Viva Films' },
-  { rank:20, title:'My Bebe Love: KiligPaMore', year:2015, gross:'₱385 million', prod:'GMA Pictures,APT Entertainment' }
+  { rank:1,  title:'Hello, Love, Again',               year:2024, gross:'₱1.60B', prod:'ABS-CBN Studios / Star Cinema / GMA Pictures' },
+  { rank:2,  title:'Rewind',                           year:2023, gross:'₱924M',  prod:'Star Cinema / APT Entertainment / AgostoDos Pictures' },
+  { rank:3,  title:'Hello, Love, Goodbye',             year:2019, gross:'₱880M',  prod:'Star Cinema' },
+  { rank:4,  title:'The Hows of Us',                   year:2018, gross:'₱810M',  prod:'Star Cinema' },
+  { rank:5,  title:'The Super Parental Guardians',     year:2016, gross:'₱598M',  prod:'Star Cinema' },
+  { rank:6,  title:'Fantastica',                       year:2018, gross:'₱596M',  prod:'Star Cinema / Viva Films' },
+  { rank:7,  title:'Starting Over Again',              year:2014, gross:'₱579M',  prod:'Star Cinema' },
+  { rank:8,  title:'Gandarrapiddo: The Revenger Squad',year:2017, gross:'₱571M',  prod:'Star Cinema / Viva Films' },
+  { rank:9,  title:'A Second Chance',                  year:2015, gross:'₱556M',  prod:'Star Cinema' },
+  { rank:10, title:'Miracle in Cell No. 7',            year:2019, gross:'₱543M',  prod:'Viva Films' },
+  { rank:11, title:'Beauty and the Bestie',            year:2015, gross:'₱526M',  prod:'Star Cinema / Viva Films' },
+  { rank:12, title:'And the Breadwinner Is...',        year:2024, gross:'₱460M',  prod:'ABS-CBN Studios / Star Cinema / The IdeaFirst Company' },
+  { rank:13, title:'The Amazing Praybeyt Benjamin',    year:2014, gross:'₱456M',  prod:'Star Cinema / Viva Films' },
+  { rank:14, title:'Un/Happy for You',                 year:2024, gross:'₱450M',  prod:'ABS-CBN Studios / Star Cinema / Viva Films' },
+  { rank:15, title:'Girl, Boy, Bakla, Tomboy',         year:2013, gross:'₱436M',  prod:'Star Cinema / Viva Films' },
+  { rank:16, title:'It Takes a Man and a Woman',       year:2013, gross:'₱405M',  prod:'Star Cinema / Viva Films' },
+  { rank:17, title:'My Ex and Whys',                   year:2017, gross:'₱400M',  prod:'Star Cinema' },
+  { rank:18, title:'Sisterakas',                       year:2012, gross:'₱393M',  prod:'Star Cinema / Viva Films' },
+  { rank:19, title:'Call Me Mother',                   year:2025, gross:'₱392M',  prod:'Star Cinema / The IdeaFirst Company / Viva Films' },
+  { rank:20, title:'My Bebe Love: KiligPaMore',        year:2015, gross:'₱385M',  prod:'GMA Pictures / APT Entertainment' },
 ];
 
 function weekBadge(w) {
@@ -3105,6 +3291,163 @@ function buildPitches() {
 }
 buildPitches();
 
+// ===== STORY SUBMISSIONS BOARD =====
+// Add one entry per submission the writer has agreed to have listed.
+// Titles only. Never names or emails.  status: 'received' | 'review' | 'dev'
+const submissionsData = [];
+
+const SUB_STATUS = {
+  received: ['status-open', 'Received'],
+  review:   ['status-review', 'Under Review'],
+  dev:      ['status-dev', 'In Development']
+};
+
+function mpEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function renderSubmissions() {
+  const feed  = document.getElementById('subs-feed');
+  const stats = document.getElementById('subs-stats');
+  if (!feed || !stats) return;
+
+  if (!submissionsData.length) {
+    stats.innerHTML = '';
+    feed.style.cssText = 'background:none; margin-top:0;';
+    feed.innerHTML = `
+      <div class="subs-empty">
+        <div class="subs-empty-title">The board is warming up.</div>
+        <div class="subs-empty-sub">Stories are coming in and we are reading each one. Titles will appear here as soon as the writers give us the go ahead.</div>
+      </div>`;
+    return;
+  }
+
+  const review = submissionsData.filter(s => s.status === 'review').length;
+  const dev    = submissionsData.filter(s => s.status === 'dev').length;
+  stats.innerHTML = `
+    <div class="subs-stat"><div class="subs-stat-num">${submissionsData.length}</div><div class="subs-stat-label">Received</div></div>
+    <div class="subs-stat"><div class="subs-stat-num">${review}</div><div class="subs-stat-label">Under Review</div></div>
+    <div class="subs-stat"><div class="subs-stat-num">${dev}</div><div class="subs-stat-label">In Development</div></div>`;
+
+  feed.innerHTML = submissionsData.map((s, i) => {
+    const st = SUB_STATUS[s.status] || SUB_STATUS.received;
+    const meta = [s.format, s.genre].filter(Boolean).map(mpEsc).join(' · ');
+    return `
+      <div class="pitch-row">
+        <div class="pitch-num">${String(i + 1).padStart(3, '0')}</div>
+        <div class="pitch-info">
+          <div class="pitch-name">${mpEsc(s.title)}</div>
+          ${meta ? `<div style="font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--lava); margin-bottom:6px;">${meta}</div>` : ''}
+          ${s.logline ? `<div class="pitch-logline">${mpEsc(s.logline)}</div>` : ''}
+        </div>
+        <div class="pitch-status"><div class="status-badge ${st[0]}">${st[1]}</div></div>
+      </div>`;
+  }).join('');
+}
+
+// ===== FIRST DOCUMENTARY (ORIGINALS PAGE) =====
+// Fill in these fields and the page updates itself. Leave a field empty and it is simply left out.
+// trailer: a YouTube or Facebook video link.  poster: e.g. 'images/my-documentary.jpg'.
+// credits: [{ role:'Director', name:'Full Name' }, ...]
+const DOC = {
+  title: '',
+  tagline: '',
+  runtime: '',
+  year: '',
+  genre: '',
+  language: '',
+  director: '',
+  premiere: '',
+  synopsis: '',
+  poster: '',
+  trailer: '',
+  watchUrl: '',
+  credits: []
+};
+
+const MP_FACEBOOK = 'https://www.facebook.com/profile.php?id=61590517229583';
+
+function docEmbedUrl(url) {
+  if (!url) return null;
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
+  if (yt) return 'https://www.youtube.com/embed/' + yt[1];
+  if (/facebook\.com|fb\.watch/.test(url)) {
+    return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false';
+  }
+  return null;
+}
+
+function renderDoc() {
+  const screen = document.getElementById('doc-screen');
+  const info   = document.getElementById('doc-info');
+  if (!screen || !info) return;
+
+  // Screen: trailer, else poster, else teaser
+  const embed = docEmbedUrl(DOC.trailer);
+  if (embed) {
+    screen.innerHTML = `<iframe src="${mpEsc(embed)}" title="${mpEsc(DOC.title || 'Documentary trailer')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  } else if (DOC.poster) {
+    screen.innerHTML = `<img src="${mpEsc(DOC.poster)}" alt="${mpEsc(DOC.title || 'Documentary poster')}">`;
+  } else {
+    screen.innerHTML = `
+      <div class="orig-teaser">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="ogCrater" cx="50%" cy="55%" r="50%"><stop offset="0%" stop-color="#f97316"/><stop offset="60%" stop-color="#e84c1e" stop-opacity=".6"/><stop offset="100%" stop-color="#e84c1e" stop-opacity="0"/></radialGradient>
+            <linearGradient id="ogVol" x1=".5" y1="0" x2=".5" y2="1"><stop offset="0%" stop-color="#3a2f28"/><stop offset="100%" stop-color="#151210"/></linearGradient>
+          </defs>
+          <path d="M6 108 L44 58 L52 36 L60 18 L68 36 L76 58 L114 108Z" fill="url(#ogVol)" stroke="#5a4a3a" stroke-width="1.2" stroke-linejoin="round"/>
+          <ellipse cx="60" cy="22" rx="20" ry="12" fill="url(#ogCrater)"/>
+          <circle cx="52" cy="12" r="3.4" fill="#f97316" opacity=".9"/>
+          <circle cx="68" cy="8" r="2.6" fill="#e84c1e" opacity=".8"/>
+          <circle cx="60" cy="3" r="2" fill="#f97316" opacity=".65"/>
+        </svg>
+        <div class="orig-teaser-title">MAYON<span>.</span>PICTURES</div>
+        <div class="orig-teaser-sub">Premiere details coming soon</div>
+      </div>`;
+  }
+
+  // Details
+  const metaRows = [
+    ['Director', DOC.director], ['Runtime', DOC.runtime], ['Year', DOC.year],
+    ['Genre', DOC.genre], ['Language', DOC.language], ['Premiere', DOC.premiere]
+  ].filter(r => r[1]);
+
+  const synopsis = DOC.synopsis ||
+    'Our first documentary is ready for audiences. The title, trailer and screening details will be unveiled right here. Follow Mayon Pictures on Facebook to hear it first.';
+
+  info.innerHTML = `
+    <div class="orig-badge">Documentary</div>
+    <div class="orig-title ${DOC.title ? '' : 'muted'}">${mpEsc(DOC.title || 'Title to be announced')}</div>
+    ${DOC.tagline ? `<div class="orig-tagline">${mpEsc(DOC.tagline)}</div>` : ''}
+    ${metaRows.length ? `<div class="orig-meta">${metaRows.map(r => `<div class="orig-meta-row"><span class="orig-meta-label">${mpEsc(r[0])}</span><span class="orig-meta-val">${mpEsc(r[1])}</span></div>`).join('')}</div>` : ''}
+    <p class="orig-synopsis">${mpEsc(synopsis)}</p>
+    <div class="orig-cta">
+      ${DOC.watchUrl ? `<a class="orig-btn" href="${mpEsc(DOC.watchUrl)}" target="_blank" rel="noopener">Watch Now</a>` : ''}
+      <a class="orig-btn ${DOC.watchUrl ? 'ghost' : ''}" href="${MP_FACEBOOK}" target="_blank" rel="noopener">Follow for Updates</a>
+    </div>`;
+
+  // Credits
+  const creditsWrap = document.getElementById('doc-credits');
+  const creditsGrid = document.getElementById('doc-credits-grid');
+  if (creditsWrap && creditsGrid) {
+    if (DOC.credits && DOC.credits.length) {
+      creditsGrid.innerHTML = DOC.credits.map(c => `<div class="orig-credit"><div class="orig-credit-role">${mpEsc(c.role)}</div><div class="orig-credit-name">${mpEsc(c.name)}</div></div>`).join('');
+      creditsWrap.style.display = '';
+    } else {
+      creditsWrap.style.display = 'none';
+    }
+  }
+}
+
+// Render now, and again once the whole page has loaded (the Originals markup sits further down the file).
+renderSubmissions();
+renderDoc();
+document.addEventListener('DOMContentLoaded', () => { renderSubmissions(); renderDoc(); });
+
+
 // ===== FORM =====
 function togglePill(el) { el.classList.toggle('selected'); }
 
@@ -3178,6 +3521,49 @@ function showToast(title, msg, isError = false) {
   setTimeout(() => toast.classList.remove('show'), 4000);
 }
 </script>
+
+<!-- ===================================================
+     ORIGINALS PAGE
+     =================================================== -->
+<div class="page" id="page-originals">
+
+  <div class="orig-header">
+    <div class="section-label">Mayon Pictures Originals</div>
+    <h2 class="section-title">Our First <em>Documentary</em></h2>
+    <p style="color: var(--smoke); font-size:13px; max-width:600px; line-height:1.8; margin-top:16px;">Every studio has a first story. This is where Mayon Pictures shares the stories we make ourselves, starting with our first documentary.</p>
+  </div>
+
+  <div class="orig-feature">
+    <div class="orig-screen" id="doc-screen"></div>
+    <div id="doc-info"></div>
+  </div>
+
+  <div class="orig-credits" id="doc-credits" style="display:none;">
+    <div class="section-label">Credits</div>
+    <div class="orig-credits-grid" id="doc-credits-grid"></div>
+  </div>
+
+  <div class="orig-notify">
+    <div class="section-label" style="justify-content:center;">Stay in the loop</div>
+    <p>Premiere dates, trailers and screening news land on our Facebook page first.</p>
+    <div class="orig-cta">
+      <a class="orig-btn" href="https://www.facebook.com/profile.php?id=61590517229583" target="_blank" rel="noopener">Follow on Facebook</a>
+      <a class="orig-btn ghost" onclick="navigate('pitches')">Pitch Us Your Story</a>
+    </div>
+  </div>
+
+  <div class="lava-line"></div>
+  <footer>
+    <div>
+      <div class="footer-brand">MAYON<span>.</span>PICTURES</div>
+      <div class="footer-tagline">Where Stories Erupt.</div>
+      <div class="footer-copy">© 2023 Mayon Pictures · mayonpictures.com</div>
+    </div>
+    <div class="footer-col"><h4>Navigate</h4><ul><li onclick="navigate('home')">Home</li><li onclick="navigate('boxoffice')">Box Office</li><li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('originals')">Originals</li><li onclick="navigate('pitches')">Pitch Us</li></ul></div>
+    <div class="footer-col"><h4>Resources</h4><ul><li>Submission Guidelines</li><li>FAQ</li><li>Previous Picks</li><li>Greenlit Projects</li></ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul><li>Instagram</li><li><a href="https://www.facebook.com/profile.php?id=61590517229583" target="_blank" style="color:inherit; text-decoration:none;">Facebook</a></li><li>Contact</li></ul></div>
+  </footer>
+</div>
 
 <!-- ===================================================
      ABOUT US PAGE
@@ -3337,7 +3723,7 @@ function showToast(title, msg, isError = false) {
       <ul>
         <li onclick="navigate('home')">Home</li>
         <li onclick="navigate('boxoffice')">Box Office</li>
-        <li onclick="navigate('reviews')">Reviews</li>
+        <li onclick="navigate('reviews')">Reviews</li><li onclick="navigate('originals')">Originals</li>
         <li onclick="navigate('pitches')">Pitch Us</li>
         <li onclick="navigate('about')">About</li>
       </ul>
