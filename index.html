@@ -1883,6 +1883,127 @@
     .nav-links { width: 100%; justify-content: center; gap: 10px; flex-wrap: wrap; }
     .nav-links li a { font-size: 9px; letter-spacing: 1px; }
   }
+
+  /* ===================== HERO DOCUMENTARY PANEL ===================== */
+  .hero-doc {
+    position: relative;
+    z-index: 2;
+    margin-left: auto;
+    margin-right: 36px;
+    display: grid;
+    grid-template-columns: auto 250px;
+    grid-template-areas: "label label" "poster info";
+    column-gap: 28px;
+    row-gap: 16px;
+    align-items: end;
+    animation: heroDocIn 1s ease both;
+    animation-delay: 0.5s;
+  }
+  @keyframes heroDocIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-doc-label {
+    grid-area: label;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--lava);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-doc-label::before { content: ''; width: 28px; height: 1px; background: var(--lava); }
+  .hero-doc-poster {
+    grid-area: poster;
+    display: block;
+    height: min(50vh, 440px);
+    aspect-ratio: 2 / 3;
+    border: 1px solid rgba(200,189,182,0.14);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6), 0 0 60px rgba(232,76,30,0.14);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .hero-doc-poster:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 36px 80px rgba(0,0,0,0.65), 0 0 80px rgba(232,76,30,0.25);
+  }
+  .hero-doc-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-doc-info { grid-area: info; display: flex; flex-direction: column; gap: 12px; }
+  .hero-doc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: var(--snow);
+    text-wrap: balance;
+  }
+  .hero-doc-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--mist);
+    text-wrap: balance;
+  }
+  .hero-doc-watch-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-top: 8px;
+  }
+  .hero-doc-btns { display: flex; flex-direction: column; gap: 10px; }
+  .hero-doc-btn {
+    display: block;
+    text-align: center;
+    padding: 13px 18px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--snow);
+    border: 1px solid rgba(200,189,182,0.3);
+    transition: background 0.3s, border-color 0.3s;
+    cursor: pointer;
+  }
+  .hero-doc-btn:hover { border-color: var(--lava); }
+  .hero-doc-btn.primary { background: var(--lava); border-color: var(--lava); color: #ffffff; }
+  .hero-doc-btn.primary:hover { background: var(--ember); border-color: var(--ember); }
+  .hero-doc-more {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--smoke);
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  .hero-doc-more:hover { color: var(--lava); }
+
+  /* narrower desktops: poster stacked above the platform buttons */
+  @media (max-width: 1179px) {
+    .hero-doc { grid-template-columns: auto; grid-template-areas: "label" "poster" "info"; }
+    .hero-doc-title, .hero-doc-tag, .hero-doc-more { display: none; }
+    .hero-doc-info { width: calc(min(50vh, 440px) * 2 / 3); }
+  }
+  /* tablets and phones: hero grows, panel sits under the headline */
+  @media (max-width: 900px) {
+    .hero { height: auto; min-height: 100vh; flex-direction: column; align-items: flex-start; justify-content: flex-end; padding: 130px 24px 60px; gap: 48px; }
+    .scroll-hint { display: none; }
+    .hero-doc { margin: 0; width: 100%; grid-template-columns: minmax(150px, 220px) 1fr; grid-template-areas: "label label" "poster info"; align-items: end; column-gap: 20px; }
+    .hero-doc-poster { height: auto; width: 100%; }
+    .hero-doc-title { display: block; font-size: 22px; }
+    .hero-doc-tag { display: block; font-size: 17px; }
+    .hero-doc-more { display: block; }
+    .hero-doc-info { width: auto; }
+  }
+  @media (max-width: 560px) {
+    .hero-doc { grid-template-columns: 1fr; grid-template-areas: "label" "poster" "info"; }
+    .hero-doc-poster { width: min(72%, 260px); }
+    .hero-doc-title, .hero-doc-tag { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -1983,6 +2104,8 @@
         <a class="btn btn-ghost" onclick="navigate('boxoffice')">View Box Office</a>
       </div>
     </div>
+
+    <div class="hero-doc" id="hero-doc" style="display:none;"></div>
 
     <div class="scroll-hint">Scroll</div>
   </div>
@@ -3422,7 +3545,35 @@ function docEmbedUrl(url) {
   return null;
 }
 
+
+// ===== HERO DOCUMENTARY PANEL (landing page) =====
+function renderHeroDoc() {
+  const el = document.getElementById('hero-doc');
+  if (!el) return;
+  if (!DOC.poster) { el.style.display = 'none'; return; }
+
+  const links = [];
+  if (DOC.watchUrl) links.push({ label: docWatchLabel(DOC.watchUrl), url: DOC.watchUrl });
+  (DOC.extraLinks || []).forEach(l => links.push({ label: l.label, url: l.url }));
+
+  const alt = (DOC.title || 'Documentary') + ' official poster';
+  el.innerHTML = `
+    <div class="hero-doc-label">Our First Documentary</div>
+    <a class="hero-doc-poster" onclick="navigate('originals')" aria-label="${mpEsc('About ' + (DOC.title || 'the documentary'))}">
+      <img src="${mpEsc(DOC.poster)}" alt="${mpEsc(alt)}">
+    </a>
+    <div class="hero-doc-info">
+      ${DOC.title ? `<div class="hero-doc-title">${mpEsc(DOC.title)}</div>` : ''}
+      ${DOC.tagline ? `<div class="hero-doc-tag">${mpEsc(DOC.tagline)}</div>` : ''}
+      ${links.length ? `<div class="hero-doc-watch-label">Watch it now on</div>
+        <div class="hero-doc-btns">${links.map((l, i) => `<a class="hero-doc-btn ${i === 0 ? 'primary' : ''}" href="${mpEsc(l.url)}" target="_blank" rel="noopener">&#9654; ${mpEsc(l.label.replace(/^Watch on /, ''))}</a>`).join('')}</div>` : ''}
+      <a class="hero-doc-more" onclick="navigate('originals')">About the film &rarr;</a>
+    </div>`;
+  el.style.display = '';
+}
+
 function renderDoc() {
+  renderHeroDoc();
   const poster = document.getElementById('doc-screen');
   const info   = document.getElementById('doc-info');
   if (!poster || !info) return;
